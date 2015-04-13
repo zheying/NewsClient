@@ -58,8 +58,8 @@ public class DetailsActivity extends BaseActivity {
 	/* 获取传递过来的数据 */
 	private void getData() {
 		news = (News) getIntent().getSerializableExtra("news");
-//		news_url = news.getSource_url();
-        news_url = Constants.HOST + "view_news/" + news.getId() + "/";
+		news_url = news.getSource_url();
+//        news_url = Constants.HOST + "view_news/" + news.getId() + "/";
 		news_title = news.getTitle();
 		news_source = news.getSource();
 		news_date = DateTools.getNewsDetailsDate(String.valueOf(news.getPublishTime()));
@@ -93,7 +93,7 @@ public class DetailsActivity extends BaseActivity {
 		//底部栏目
 		action_comment_count = (TextView) findViewById(R.id.action_comment_count);
 		
-		progressBar.setVisibility(View.VISIBLE);
+//		progressBar.setVisibility(View.VISIBLE);
 		title.setTextSize(13);
 		title.setVisibility(View.VISIBLE);
 		title.setText(news_url);

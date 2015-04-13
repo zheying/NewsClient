@@ -75,23 +75,24 @@ public class NewsFragment extends Fragment {
 	public void setUserVisibleHint(boolean isVisibleToUser) {
 		if (isVisibleToUser) {
 			//fragment可见时加载数据
-			if(newsList !=null && newsList.size() !=0){
-				handler.obtainMessage(SET_NEWSLIST).sendToTarget();
-			}else{
-				new Thread(new Runnable() {
-					@Override
-					public void run() {
-						// TODO Auto-generated method stub
-						try {
-							Thread.sleep(2);
-						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-						handler.obtainMessage(SET_NEWSLIST).sendToTarget();
-					}
-				}).start();
-			}
+			if(newsList !=null && newsList.size() !=0) {
+                handler.obtainMessage(SET_NEWSLIST).sendToTarget();
+            }
+//			}else{
+//				new Thread(new Runnable() {
+//					@Override
+//					public void run() {
+//						// TODO Auto-generated method stub
+//						try {
+//							Thread.sleep(2);
+//						} catch (InterruptedException e) {
+//							// TODO Auto-generated catch block
+//							e.printStackTrace();
+//						}
+//						handler.obtainMessage(SET_NEWSLIST).sendToTarget();
+//					}
+//				}).start();
+//			}
 		}else{
 			//fragment不可见时不执行操作
 		}
@@ -151,14 +152,17 @@ public class NewsFragment extends Fragment {
 			case SET_NEWSLIST:
 				detail_loading.setVisibility(View.GONE);
 				if(mAdapter == null){
-					mAdapter = new NewsAdapter(activity, newsList);
+                    mAdapter = new NewsAdapter(activity);
+//					mAdapter = new NewsAdapter(activity, newsList);
 					//判断是不是城市的频道
-					if(channel_id == Constants.CHANNEL_CITY){
-						//是城市频道
-						mAdapter.setCityChannel(true);
-						initCityChannel();
-					}
+//					if(channel_id == Constants.CHANNEL_CITY){
+//						//是城市频道
+//						mAdapter.setCityChannel(true);
+//						initCityChannel();
+//					}
+
 				}
+                mAdapter.addData(newsList);
 				mListView.setAdapter(mAdapter);
 				mListView.setOnScrollListener(mAdapter);
 				mListView.setPinnedHeaderView(LayoutInflater.from(activity).inflate(R.layout.list_item_section, mListView, false));

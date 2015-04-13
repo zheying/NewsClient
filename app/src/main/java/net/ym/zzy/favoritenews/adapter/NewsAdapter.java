@@ -60,9 +60,34 @@ public class NewsAdapter extends BaseAdapter implements SectionIndexer, HeadList
 		initPopWindow();
 		initDateHead();
 	}
+
+    public NewsAdapter(Activity activity) {
+        this.activity = activity;
+        this.newsList = new ArrayList<News>();
+        inflater = LayoutInflater.from(activity);
+        options = Options.getListOptions();
+        initPopWindow();
+        initDateHead();
+    }
 	
 	private List<Integer> mPositions;
 	private List<String> mSections;
+
+    public void addData(List<News> newsList){
+        boolean dataSetChanged = false;
+        if (newsList != null && newsList.size() > 0){
+            for (int i = newsList.size() - 1; i >= 0; i--){
+                News news = newsList.get(i);
+                if (!this.newsList.contains(news)){
+                    this.newsList.add(0, news);
+                    dataSetChanged = true;
+                }
+            }
+        }
+        if (dataSetChanged){
+            initDateHead();
+        }
+    }
 	
 	private void initDateHead() {
 		mSections = new ArrayList<String>();
@@ -418,11 +443,13 @@ public class NewsAdapter extends BaseAdapter implements SectionIndexer, HeadList
 
 	@Override
 	public void configureHeader(View header, int position, int alpha) {
-		int realPosition = position;
-		int section = getSectionForPosition(realPosition);
-		String title = (String) getSections()[section];
-		((TextView) header.findViewById(R.id.section_text)).setText(title);
-		((TextView) header.findViewById(R.id.section_day)).setText("今天");
+        if (getCount() > 0) {
+            int realPosition = position;
+            int section = getSectionForPosition(realPosition);
+            String title = (String) getSections()[section];
+            ((TextView) header.findViewById(R.id.section_text)).setText(title);
+            ((TextView) header.findViewById(R.id.section_day)).setText("今天");
+        }
 	}
 
 	@Override
