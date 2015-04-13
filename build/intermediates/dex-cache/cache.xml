@@ -12,15 +12,29 @@
         jar="/Users/zengzheying/develop/NewsClient/app/build/intermediates/exploded-aar/NewsClient/weibosdk/unspecified/classes.jar"
         jumboMode="false"
         revision="21.1.2"
-        sha1="3a408f352708b759251ffb5f9a712679bcebd840">
+        sha1="51428d03439c824e56b981f5c655981696fcda16">
         <dex dex="/Users/zengzheying/develop/NewsClient/app/build/intermediates/pre-dexed/debug/classes-9f8ee8d0eb8c8f64b43da29567e735eaa430abcb.jar" />
+    </item>
+    <item
+        jar="/Users/zengzheying/develop/NewsClient/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.0.0/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="d84409890828e07d344a3b9b1da545dba9897b51">
+        <dex dex="/Users/zengzheying/develop/NewsClient/app/build/intermediates/pre-dexed/debug/classes-911ba2d35752a3a582b4e8cbe12548861c79d69c.jar" />
     </item>
     <item
         jar="/Users/zengzheying/develop/NewsClient/app/build/intermediates/exploded-aar/NewsClient/SlidingMenu/unspecified/classes.jar"
         jumboMode="false"
         revision="21.1.2"
-        sha1="ea378aed150bc39e786f750d047734febb471085">
+        sha1="debaa1a8071346c627de8a9a3ab64e25c4fca914">
         <dex dex="/Users/zengzheying/develop/NewsClient/app/build/intermediates/pre-dexed/debug/classes-80b981e25148282b4b3141e4f0b3eaf557d41600.jar" />
+    </item>
+    <item
+        jar="/Users/zengzheying/develop/NewsClient/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.0.0/libs/internal_impl-22.0.0.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="b5b92f469d515a13d778900f6d50c03d12f35504">
+        <dex dex="/Users/zengzheying/develop/NewsClient/app/build/intermediates/pre-dexed/debug/internal_impl-22.0.0-33fe688085331fbd35b01a3aa7400047a121a82e.jar" />
     </item>
     <item
         jar="/Users/zengzheying/develop/NewsClient/app/libs/universal-image-loader-1.9.2-SNAPSHOT-with-sources.jar"
@@ -33,7 +47,7 @@
         jar="/Users/zengzheying/develop/NewsClient/app/build/intermediates/exploded-aar/NewsClient/data/unspecified/classes.jar"
         jumboMode="false"
         revision="21.1.2"
-        sha1="b5afd90edaa3d49c8131cdb88bf8d84a93e21d46">
+        sha1="6ae2c4a63944305a1ebc76482748f568d5b3c9b2">
         <dex dex="/Users/zengzheying/develop/NewsClient/app/build/intermediates/pre-dexed/debug/classes-937b4be4ff271b3838ec05b6638dd1446bca6b61.jar" />
     </item>
     <item
@@ -47,8 +61,15 @@
         jar="/Users/zengzheying/develop/NewsClient/app/build/intermediates/exploded-aar/NewsClient/domain/unspecified/classes.jar"
         jumboMode="false"
         revision="21.1.2"
-        sha1="d7a3e3c35673938b0951f416fd686d41adabd1f8">
+        sha1="8cb30ac698bbc52e527a5dd4b17ac9bd2c3cf47c">
         <dex dex="/Users/zengzheying/develop/NewsClient/app/build/intermediates/pre-dexed/debug/classes-04d266b7d612af5d9645517362adcf165f1e0ded.jar" />
+    </item>
+    <item
+        jar="/Users/zengzheying/Applications/android-sdk-macosx/extras/android/m2repository/com/android/support/support-annotations/22.0.0/support-annotations-22.0.0.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="685d0b2c590447e85284ed84712cb363ba04eff8">
+        <dex dex="/Users/zengzheying/develop/NewsClient/app/build/intermediates/pre-dexed/debug/support-annotations-22.0.0-e4ed00e6b1af0fdf6a4bfa38cb96d6f9bbf1fe84.jar" />
     </item>
     <item
         jar="/Users/zengzheying/develop/NewsClient/app/libs/jsoup-1.8.1.jar"
@@ -58,11 +79,11 @@
         <dex dex="/Users/zengzheying/develop/NewsClient/app/build/intermediates/pre-dexed/debug/jsoup-1.8.1-045e3a94dbdf5be053ddc08d2156de7bb8393a49.jar" />
     </item>
     <item
-        jar="/Applications/AndroidStudioBackup.app/sdk/extras/android/m2repository/com/android/support/support-v4/19.1.0/support-v4-19.1.0.jar"
+        jar="/Users/zengzheying/develop/NewsClient/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.0.0/classes.jar"
         jumboMode="false"
         revision="21.1.2"
-        sha1="85f201b380937e61a9dce6ca90ccf6872abbfb67">
-        <dex dex="/Users/zengzheying/develop/NewsClient/app/build/intermediates/pre-dexed/debug/support-v4-19.1.0-7e24e9eddd085f2586137c904fa58e26760793e1.jar" />
+        sha1="4e86306289ace4aa0cfec44a05ed2b410d36989d">
+        <dex dex="/Users/zengzheying/develop/NewsClient/app/build/intermediates/pre-dexed/debug/classes-11b7446115cda1da343e3cd9484ae7c3018568af.jar" />
     </item>
 
 </items>

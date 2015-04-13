@@ -6,6 +6,7 @@ import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -17,6 +18,7 @@ import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -30,6 +32,7 @@ import net.ym.zzy.favoritenews.bean.ChannelItem;
 import net.ym.zzy.favoritenews.bean.ChannelManage;
 import net.ym.zzy.favoritenews.fragment.NewsFragment;
 import net.ym.zzy.favoritenews.tool.BaseTools;
+import net.ym.zzy.favoritenews.tool.UIUtils;
 import net.ym.zzy.favoritenews.view.ColumnHorizontalScrollView;
 import net.ym.zzy.favoritenews.view.DrawerView;
 import net.ym.zzy.favoritenews.weibo.auth.WBAuthHelper;
@@ -81,6 +84,11 @@ public class MainActivity extends FragmentActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+//		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+//			//UIUtils.setSystemBarTintColor(this);
+//			getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+//			UIUtils.setSystemBarTintColor(this);
+//		}
 		setContentView(R.layout.main);
 
         WBAuthHelper.initWBAuthHelper(this);

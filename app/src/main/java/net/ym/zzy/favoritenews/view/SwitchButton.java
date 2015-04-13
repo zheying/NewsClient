@@ -88,71 +88,71 @@ public class SwitchButton extends CompoundButton {
 
 	public SwitchButton(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
-		mContext = context;
-		mTextPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
-		Resources res = getResources();
-		mTextPaint.density = res.getDisplayMetrics().density;
-		TypedArray a = context.obtainStyledAttributes(attrs,
-				R.styleable.SwitchButton, defStyle, 0);// 从配置文件中获取相关配置
-		mThumbDrawable = a.getDrawable(R.styleable.SwitchButton_thumb);// 获取配置的轨迹资源
-		mTrackDrawable = a.getDrawable(R.styleable.SwitchButton_track);// 获取配置的开关资源
-		mTextOn = a.getText(R.styleable.SwitchButton_textOn);// 获取配置中 选中情况下的显示文字
-																// on
-		mTextOff = a.getText(R.styleable.SwitchButton_textOff);// 获取配置的
-																// 为选中情况下的显示文字
-																// off
-		mThumbTextPadding = a.getDimensionPixelSize(
-				R.styleable.SwitchButton_thumbTextPadding, 0);// 获取配置的按钮字体大小
-		mSwitchMinWidth = a.getDimensionPixelSize(
-				R.styleable.SwitchButton_switchMinWidth, 0);// 获取配置的最小宽度
-		mSwitchPadding = a.getDimensionPixelSize(
-				R.styleable.SwitchButton_switchPadding, 0);// 获取配置的padding属性
-
-		int appearance = a.getResourceId(
-				R.styleable.SwitchButton_switchTextAppearance, 0);// 获取配置文件中获取显示字体格式
-		// 判断设定格式是否存在，存在的话就赋值
-		if (appearance != 0) {
-			setSwitchTextAppearance(context, appearance);
-		}
-		a.recycle();// 回收配置文件资源
-		ViewConfiguration config = ViewConfiguration.get(context);
-		mTouchSlop = config.getScaledTouchSlop();
-		mMinFlingVelocity = config.getScaledMinimumFlingVelocity();
-		refreshDrawableState();
-		setChecked(isChecked());
+//		mContext = context;
+//		mTextPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
+//		Resources res = getResources();
+//		mTextPaint.density = res.getDisplayMetrics().density;
+//		TypedArray a = context.obtainStyledAttributes(attrs,
+//				R.styleable.SwitchButton, defStyle, 0);// 从配置文件中获取相关配置
+//		mThumbDrawable = a.getDrawable(R.styleable.SwitchButton_thumb);// 获取配置的轨迹资源
+//		mTrackDrawable = a.getDrawable(R.styleable.SwitchButton_track);// 获取配置的开关资源
+//		mTextOn = a.getText(R.styleable.SwitchButton_textOn);// 获取配置中 选中情况下的显示文字
+//																// on
+//		mTextOff = a.getText(R.styleable.SwitchButton_textOff);// 获取配置的
+//																// 为选中情况下的显示文字
+//																// off
+//		mThumbTextPadding = a.getDimensionPixelSize(
+//				R.styleable.SwitchButton_thumbTextPadding, 0);// 获取配置的按钮字体大小
+//		mSwitchMinWidth = a.getDimensionPixelSize(
+//				R.styleable.SwitchButton_switchMinWidth, 0);// 获取配置的最小宽度
+//		mSwitchPadding = a.getDimensionPixelSize(
+//				R.styleable.SwitchButton_switchPadding, 0);// 获取配置的padding属性
+//
+//		int appearance = a.getResourceId(
+//				R.styleable.SwitchButton_switchTextAppearance, 0);// 获取配置文件中获取显示字体格式
+//		// 判断设定格式是否存在，存在的话就赋值
+//		if (appearance != 0) {
+//			setSwitchTextAppearance(context, appearance);
+//		}
+//		a.recycle();// 回收配置文件资源
+//		ViewConfiguration config = ViewConfiguration.get(context);
+//		mTouchSlop = config.getScaledTouchSlop();
+//		mMinFlingVelocity = config.getScaledMinimumFlingVelocity();
+//		refreshDrawableState();
+//		setChecked(isChecked());
 	}
 
 	/**
 	 * 设置on,off显示的字体大小及格式
 	 * */
 	public void setSwitchTextAppearance(Context context, int resid) {
-		mContext = context;
-		TypedArray appearance = context.obtainStyledAttributes(resid,
-				R.styleable.TextAppearance);
-		ColorStateList colors;
-		int ts;
-		colors = appearance
-				.getColorStateList(R.styleable.TextAppearance_textColor);
-		if (colors != null) {
-			mTextColors = colors;
-		} else {
-			mTextColors = getTextColors();
-		}
-		ts = appearance.getDimensionPixelSize(
-				R.styleable.TextAppearance_textSize, 0);
-		if (ts != 0) {
-			if (ts != mTextPaint.getTextSize()) {
-				mTextPaint.setTextSize(ts);
-				requestLayout();
-			}
-		}
-		int typefaceIndex, styleIndex;
-		typefaceIndex = appearance.getInt(R.styleable.TextAppearance_typeface,
-				-1);
-		styleIndex = appearance
-				.getInt(R.styleable.TextAppearance_textStyle, -1);
-		setSwitchTypefaceByIndex(typefaceIndex, styleIndex);
-		appearance.recycle();// 回收配置文件资源
+//		mContext = context;
+//		TypedArray appearance = context.obtainStyledAttributes(resid,
+//				R.styleable.TextAppearance);
+//		ColorStateList colors;
+//		int ts;
+//		colors = appearance
+//				.getColorStateList(R.styleable.TextAppearance_textColor);
+//		if (colors != null) {
+//			mTextColors = colors;
+//		} else {
+//			mTextColors = getTextColors();
+//		}
+//		ts = appearance.getDimensionPixelSize(
+//				R.styleable.TextAppearance_textSize, 0);
+//		if (ts != 0) {
+//			if (ts != mTextPaint.getTextSize()) {
+//				mTextPaint.setTextSize(ts);
+//				requestLayout();
+//			}
+//		}
+//		int typefaceIndex, styleIndex;
+//		typefaceIndex = appearance.getInt(R.styleable.TextAppearance_typeface,
+//				-1);
+//		styleIndex = appearance
+//				.getInt(R.styleable.TextAppearance_textStyle, -1);
+//		setSwitchTypefaceByIndex(typefaceIndex, styleIndex);
+//		appearance.recycle();// 回收配置文件资源
 	}
 
 	/** 根据自定义的配置属性，设置字体风格 */
@@ -281,19 +281,19 @@ public class SwitchButton extends CompoundButton {
 	}
 
 	public void populateAccessibilityEvent(AccessibilityEvent event) {
-		if (isChecked()) {
-			CharSequence text = mOnLayout.getText();
-			if (TextUtils.isEmpty(text)) {
-				text = mContext.getString(R.string.switch_on);
-			}
-			event.getText().add(text);
-		} else {
-			CharSequence text = mOffLayout.getText();
-			if (TextUtils.isEmpty(text)) {
-				text = mContext.getString(R.string.switch_off);
-			}
-			event.getText().add(text);
-		}
+//		if (isChecked()) {
+//			CharSequence text = mOnLayout.getText();
+//			if (TextUtils.isEmpty(text)) {
+//				text = mContext.getString(R.string.switch_on);
+//			}
+//			event.getText().add(text);
+//		} else {
+//			CharSequence text = mOffLayout.getText();
+//			if (TextUtils.isEmpty(text)) {
+//				text = mContext.getString(R.string.switch_off);
+//			}
+//			event.getText().add(text);
+//		}
 	}
 
 	private Layout makeLayout(CharSequence text) {

@@ -7,10 +7,15 @@
 
     <include layout="@layout/main_head" />
 
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="40.0dip"-->
+        <!--android:background="#fff3f3f3"-->
+        <!--android:orientation="horizontal" >-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="40.0dip"
-        android:background="#fff3f3f3"
+        android:background="@color/material_700"
         android:orientation="horizontal" >
 
         <RelativeLayout
@@ -51,8 +56,16 @@
                 android:layout_height="40.0dip"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:background="@drawable/channel_rightblock"
+                android:background="#00000000"
                 android:visibility="visible" />
+            <!--<ImageView-->
+                <!--android:id="@+id/shade_right"-->
+                <!--android:layout_width="10.0dip"-->
+                <!--android:layout_height="40.0dip"-->
+                <!--android:layout_alignParentRight="true"-->
+                <!--android:layout_centerVertical="true"-->
+                <!--android:background="@drawable/channel_rightblock"-->
+                <!--android:visibility="visible" />-->
         </RelativeLayout>
 
         <LinearLayout

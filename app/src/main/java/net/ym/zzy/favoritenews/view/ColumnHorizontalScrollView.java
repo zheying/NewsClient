@@ -62,7 +62,7 @@ public class ColumnHorizontalScrollView extends HorizontalScrollView {
 			return;
 		}
 		leftImage.setVisibility(View.VISIBLE);
-	   rightImage.setVisibility(View.VISIBLE);
+	   	rightImage.setVisibility(View.VISIBLE);
 	}
 	/** 
 	 * 传入父类布局中的资源文件
