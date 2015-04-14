@@ -148,7 +148,8 @@
     </style>
 
     <style name="left_drawer_item_line">
-        <item name="android:background">@color/left_drawer_item_line</item>
+        <!--<item name="android:background">@color/left_drawer_item_line</item>-->
+        <item name="android:background">@color/material_500</item>
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">0.5dip</item>
     </style>
@@ -535,7 +536,8 @@
     </style>
 
     <style name="deail_title_text_style" parent="@style/title_text_style">
-        <item name="android:textColor">@color/detail_title_text_color</item>
+        <!--<item name="android:textColor">@color/detail_title_text_color</item>-->
+        <item name="android:textColor">@color/white</item>
     </style>
 
     <style name="toolbar_action">

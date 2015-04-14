@@ -2,11 +2,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/detail_title_bar_style"
     android:gravity="center_vertical"
-    android:orientation="horizontal" >
+    android:orientation="horizontal"
+    android:background="@color/material_700">
 
     <TextView
         android:id="@+id/back"
-        style="@style/detail_back_view"
+        style="@style/back_view"
         android:onClick="doBack" />
 
     <TextView

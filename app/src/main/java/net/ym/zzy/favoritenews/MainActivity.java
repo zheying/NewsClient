@@ -168,7 +168,8 @@ public class MainActivity extends FragmentActivity {
 	private void initTabColumn() {
 		mRadioGroup_content.removeAllViews();
 		int count =  userChannelList.size();
-		mColumnHorizontalScrollView.setParam(this, mScreenWidth, mRadioGroup_content, shade_left, shade_right, ll_more_columns, rl_column);
+//		mColumnHorizontalScrollView.setParam(this, mScreenWidth, mRadioGroup_content, shade_left, shade_right, ll_more_columns, rl_column);
+        mColumnHorizontalScrollView.setParam(this, mScreenWidth, mRadioGroup_content, ll_more_columns, rl_column);
 		for(int i = 0; i< count; i++){
 			LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(mItemWidth , LayoutParams.WRAP_CONTENT);
 			params.leftMargin = 5;
@@ -199,7 +200,7 @@ public class MainActivity extends FragmentActivity {
 				        	  mViewPager.setCurrentItem(i);
 				          }
 			          }
-			          Toast.makeText(getApplicationContext(), userChannelList.get(v.getId()).getName(), Toast.LENGTH_SHORT).show();
+//			          Toast.makeText(getApplicationContext(), userChannelList.get(v.getId()).getName(), Toast.LENGTH_SHORT).show();
 				}
 			});
 			mRadioGroup_content.addView(columnTextView, i ,params);

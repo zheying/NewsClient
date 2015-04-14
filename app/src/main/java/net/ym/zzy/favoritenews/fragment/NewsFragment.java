@@ -117,7 +117,7 @@ public class NewsFragment extends Fragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-
+                initData();
             }
         });
 		return view;
@@ -133,6 +133,10 @@ public class NewsFragment extends Fragment {
                 if (newsJson != null && newsJson.getCode() == 0){
                     newsList = newsJson.getData().getNewsList();
                     handler.obtainMessage(SET_NEWSLIST).sendToTarget();
+                }
+
+                if (swipeRefreshLayout != null){
+                    swipeRefreshLayout.setRefreshing(false);
                 }
             }
 
