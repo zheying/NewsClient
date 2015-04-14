@@ -26,15 +26,8 @@
         jar="/Users/zengzheying/develop/NewsClient/app/build/intermediates/exploded-aar/NewsClient/SlidingMenu/unspecified/classes.jar"
         jumboMode="false"
         revision="21.1.2"
-        sha1="8cfe046db14bdf1962ded5ed00124eee5268ea4c">
+        sha1="a55bf2a29111875a6645ab47f13eaffe49da64ad">
         <dex dex="/Users/zengzheying/develop/NewsClient/app/build/intermediates/pre-dexed/debug/classes-80b981e25148282b4b3141e4f0b3eaf557d41600.jar" />
-    </item>
-    <item
-        jar="/Applications/AndroidStudioBackup.app/sdk/extras/android/m2repository/com/android/support/support-annotations/22.0.0/support-annotations-22.0.0.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="685d0b2c590447e85284ed84712cb363ba04eff8">
-        <dex dex="/Users/zengzheying/develop/NewsClient/app/build/intermediates/pre-dexed/debug/support-annotations-22.0.0-1c6d4c276194add4a4a8ba2dadf8e91c4a94dc31.jar" />
     </item>
     <item
         jar="/Users/zengzheying/develop/NewsClient/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.0.0/libs/internal_impl-22.0.0.jar"
