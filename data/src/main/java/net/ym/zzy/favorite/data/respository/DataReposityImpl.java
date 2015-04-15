@@ -6,7 +6,7 @@ import android.os.Looper;
 
 import net.ym.zzy.domain.entity.json.JsonBase;
 import net.ym.zzy.domain.entity.json.NewsJson;
-import net.ym.zzy.domain.respository.DataRespository;
+import net.ym.zzy.domain.respository.DataRepository;
 import net.ym.zzy.favorite.data.executor.JobExecutor;
 import net.ym.zzy.favorite.data.loader.HttpDataLoder;
 
@@ -15,16 +15,16 @@ import java.util.HashMap;
 /**
  * Created by zengzheying on 15/3/29.
  */
-public class DataResposityImpl implements DataRespository {
+public class DataReposityImpl implements DataRepository {
 
-//    private final String HOST = "http://192.168.202.202:8000/";
-    private final String HOST = "http://120.25.217.247:8000/";
+    private final String HOST = "http://192.168.202.202:8000/";
+//    private final String HOST = "http://120.25.217.247:8000/";
 
-    private static DataRespository mInstance;
+    private static DataRepository mInstance;
 
-    public static DataRespository getInstance() {
+    public static DataRepository getInstance() {
         if (mInstance == null){
-            mInstance = new DataResposityImpl();
+            mInstance = new DataReposityImpl();
         }
         return mInstance;
     }
@@ -35,13 +35,14 @@ public class DataResposityImpl implements DataRespository {
         final String key = "newslist_" + catalog + "_" + pageIndex + "_" + PAGE_SIZE;
         JobExecutor.getInstance().cancel(key);
         final HashMap<String, String> params = new HashMap<String, String>();
-        params.put("catalog", String.valueOf(catalog));
+        params.put("cat", String.valueOf(catalog));
         params.put("page", String.valueOf(pageIndex));
         Runnable loader = new Runnable() {
             @Override
             public void run() {
                 try {
-                    final NewsJson newsJson = HttpDataLoder.getDataByGetMethod(context, HOST + "news/", key, pageIndex, params, null, isRefresh, NewsJson.class);
+                    final NewsJson newsJson = HttpDataLoder.getDataByGetMethod(context, HOST + "news/",
+                            key, pageIndex, params, null, isRefresh, NewsJson.class, 9000);
                     handler.post(new Runnable() {
                         @Override
                         public void run() {

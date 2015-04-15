@@ -4,9 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.w3c.dom.Text;
-
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -16,33 +15,32 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import net.ym.zzy.domain.entity.News;
 import net.ym.zzy.domain.entity.json.NewsJson;
-import net.ym.zzy.domain.respository.DataRespository;
-import net.ym.zzy.favorite.data.respository.DataResposityImpl;
-import net.ym.zzy.favoritenews.CityListActivity;
+import net.ym.zzy.domain.respository.DataRepository;
+import net.ym.zzy.favorite.data.respository.DataReposityImpl;
 import net.ym.zzy.favoritenews.DetailsActivity;
 import net.ym.zzy.favoritenews.R;
 import net.ym.zzy.favoritenews.adapter.NewsAdapter;
-import net.ym.zzy.favoritenews.bean.NewsEntity;
+import net.ym.zzy.favoritenews.mvp.model.Model;
+import net.ym.zzy.favoritenews.mvp.model.NewsListModel;
+import net.ym.zzy.favoritenews.mvp.model.NewsModel;
+import net.ym.zzy.favoritenews.mvp.presenter.NewsListPresenter;
+import net.ym.zzy.favoritenews.mvp.view.NewsListView;
 import net.ym.zzy.favoritenews.tool.Constants;
 import net.ym.zzy.favoritenews.view.HeadListView;
 
-public class NewsFragment extends Fragment {
+public class NewsFragment extends Fragment implements NewsListView{
 	private final static String TAG = "NewsFragment";
 	Activity activity;
-//	ArrayList<NewsEntity> newsList = new ArrayList<NewsEntity>();
-    List<News> newsList = new ArrayList<News>();
+    List<NewsModel> newsList = new ArrayList<NewsModel>();
 	HeadListView mListView;
 	NewsAdapter mAdapter;
 	String text;
@@ -54,13 +52,16 @@ public class NewsFragment extends Fragment {
 	private TextView notify_view_text;
 
     private SwipeRefreshLayout swipeRefreshLayout;
+
+	private NewsListPresenter mNewsListPresenter;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		Bundle args = getArguments();
 		text = args != null ? args.getString("text") : "";
 		channel_id = args != null ? args.getInt("id", 0) : 0;
-		initData();
+		mNewsListPresenter = new NewsListPresenter(this);
+		loadNewsData(channel_id, 0, true);
 		super.onCreate(savedInstanceState);
 	}
 
@@ -115,37 +116,41 @@ public class NewsFragment extends Fragment {
         swipeRefreshLayout.setColorScheme(android.R.color.holo_blue_bright, android.R.color.holo_green_light,
                 android.R.color.holo_orange_light, android.R.color.holo_red_light);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                initData();
-            }
-        });
+			@Override
+			public void onRefresh() {
+				loadNewsData(channel_id, 0, true);
+			}
+		});
 		return view;
 	}
 
-	private void initData() {
-//		newsList = Constants.getNewsList();
-        DataRespository dataRespository = DataResposityImpl.getInstance();
-        dataRespository.getNewsList(getActivity(), 1, 0, true, new DataRespository.ResponseCallback() {
-            @Override
-            public void onResponse(Serializable ser) {
-                NewsJson newsJson = (NewsJson)ser;
-                if (newsJson != null && newsJson.getCode() == 0){
-                    newsList = newsJson.getData().getNewsList();
-                    handler.obtainMessage(SET_NEWSLIST).sendToTarget();
-                }
+//	private void initData() {
+////		newsList = Constants.getNewsList();
+//        DataRepository dataRepository = DataReposityImpl.getInstance();
+//        dataRepository.getNewsList(getActivity(), 1, 0, true, new DataRepository.ResponseCallback() {
+//			@Override
+//			public void onResponse(Serializable ser) {
+//				NewsJson newsJson = (NewsJson) ser;
+//				if (newsJson != null && newsJson.getCode() == 0) {
+//					newsList = newsJson.getData().getNewsList();
+//					handler.obtainMessage(SET_NEWSLIST).sendToTarget();
+//				}
+//
+//				if (swipeRefreshLayout != null) {
+//					swipeRefreshLayout.setRefreshing(false);
+//				}
+//			}
+//
+//			@Override
+//			public void onException(Exception ex) {
+//				Toast.makeText(getActivity(), "异常", Toast.LENGTH_SHORT).show();
+//				ex.printStackTrace(System.err);
+//			}
+//		});
+//	}
 
-                if (swipeRefreshLayout != null){
-                    swipeRefreshLayout.setRefreshing(false);
-                }
-            }
-
-            @Override
-            public void onException(Exception ex) {
-                Toast.makeText(getActivity(), "异常", Toast.LENGTH_SHORT).show();
-                ex.printStackTrace(System.err);
-            }
-        });
+	private void loadNewsData(int catalog, int pageIndex, boolean isRefresh){
+		mNewsListPresenter.loadData(catalog, pageIndex, isRefresh);
 	}
 	
 	Handler handler = new Handler() {
@@ -157,16 +162,8 @@ public class NewsFragment extends Fragment {
 				detail_loading.setVisibility(View.GONE);
 				if(mAdapter == null){
                     mAdapter = new NewsAdapter(activity);
-//					mAdapter = new NewsAdapter(activity, newsList);
-					//判断是不是城市的频道
-//					if(channel_id == Constants.CHANNEL_CITY){
-//						//是城市频道
-//						mAdapter.setCityChannel(true);
-//						initCityChannel();
-//					}
-
 				}
-                mAdapter.addData(newsList);
+                int count = mAdapter.addData(newsList);
 				mListView.setAdapter(mAdapter);
 				mListView.setOnScrollListener(mAdapter);
 				mListView.setPinnedHeaderView(LayoutInflater.from(activity).inflate(R.layout.list_item_section, mListView, false));
@@ -189,9 +186,8 @@ public class NewsFragment extends Fragment {
 						}
 					}
 				});
-				if(channel_id == 1){
-					initNotify();
-				}
+
+				initNotify(count);
 				break;
 			default:
 				break;
@@ -199,31 +195,16 @@ public class NewsFragment extends Fragment {
 			super.handleMessage(msg);
 		}
 	};
-	
-	/* 初始化选择城市的header*/
-	public void initCityChannel() {
-		View headview = LayoutInflater.from(activity).inflate(R.layout.city_category_list_tip, null);
-		TextView chose_city_tip = (TextView) headview.findViewById(R.id.chose_city_tip);
-		chose_city_tip.setOnClickListener(new OnClickListener() {
 
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				Intent intent = new Intent(activity, CityListActivity.class);
-				startActivity(intent);
-			}
-		});
-		mListView.addHeaderView(headview);
-	}
 	
 	/* 初始化通知栏目*/
-	private void initNotify() {
+	private void initNotify(final int count) {
 		new Handler().postDelayed(new Runnable() {
 			
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
-				notify_view_text.setText(String.format(getString(R.string.ss_pattern_update), 10));
+				notify_view_text.setText(String.format(getString(R.string.ss_pattern_update), count));
 				notify_view.setVisibility(View.VISIBLE);
 				new Handler().postDelayed(new Runnable() {
 					
@@ -250,5 +231,55 @@ public class NewsFragment extends Fragment {
 		// TODO Auto-generated method stub
 		super.onDestroy();
 		Log.d(TAG, "channel_id = " + channel_id);
+	}
+
+	@Override
+	public void onDetach() {
+		super.onDetach();
+	}
+
+
+
+	@Override
+	public void onLoadingData() {
+
+	}
+
+	@Override
+	public void onLoadDataSuccessfully(Model model) {
+		NewsListModel newsListModel = (NewsListModel)model;
+		newsList = newsListModel.getNewsModelList();
+		handler.obtainMessage(SET_NEWSLIST).sendToTarget();
+		if (swipeRefreshLayout != null) {
+			swipeRefreshLayout.setRefreshing(false);
+		}
+	}
+
+	@Override
+	public void onLoadDataError() {
+		if (swipeRefreshLayout != null) {
+			swipeRefreshLayout.setRefreshing(false);
+		}
+		Toast.makeText(getActivity(), "加载数据失败", Toast.LENGTH_SHORT).show();
+	}
+
+	@Override
+	public void sendData() {
+
+	}
+
+	@Override
+	public void onSendDataSuccessfully() {
+
+	}
+
+	@Override
+	public void onSendDataError() {
+
+	}
+
+	@Override
+	public Context getContext() {
+		return getActivity();
 	}
 }

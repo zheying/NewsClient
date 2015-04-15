@@ -33,9 +33,8 @@ import android.widget.SectionIndexer;
 import android.widget.TextView;
 import android.widget.AbsListView.OnScrollListener;
 
-import net.ym.zzy.domain.entity.News;
 import net.ym.zzy.favoritenews.R;
-import net.ym.zzy.favoritenews.bean.NewsEntity;
+import net.ym.zzy.favoritenews.mvp.model.NewsModel;
 import net.ym.zzy.favoritenews.tool.Constants;
 import net.ym.zzy.favoritenews.tool.DateTools;
 import net.ym.zzy.favoritenews.tool.Options;
@@ -45,14 +44,14 @@ public class NewsAdapter extends BaseAdapter implements SectionIndexer, HeadList
 
     private final int ANIMATION_DURATION = 350;
 
-	List<News> newsList;
+	List<NewsModel> newsList;
 	Activity activity;
 	LayoutInflater inflater = null;
 	protected ImageLoader imageLoader = ImageLoader.getInstance();
 	DisplayImageOptions options;
 	/** 弹出的更多选择框  */
 	private PopupWindow popupWindow;
-	public NewsAdapter(Activity activity, List<News> newsList) {
+	public NewsAdapter(Activity activity, List<NewsModel> newsList) {
 		this.activity = activity;
 		this.newsList = newsList;
 		inflater = LayoutInflater.from(activity);
@@ -63,7 +62,7 @@ public class NewsAdapter extends BaseAdapter implements SectionIndexer, HeadList
 
     public NewsAdapter(Activity activity) {
         this.activity = activity;
-        this.newsList = new ArrayList<News>();
+        this.newsList = new ArrayList<NewsModel>();
         inflater = LayoutInflater.from(activity);
         options = Options.getListOptions();
         initPopWindow();
@@ -73,20 +72,23 @@ public class NewsAdapter extends BaseAdapter implements SectionIndexer, HeadList
 	private List<Integer> mPositions;
 	private List<String> mSections;
 
-    public void addData(List<News> newsList){
+    public int addData(List<NewsModel> newsList){
+		int count = 0;
         boolean dataSetChanged = false;
         if (newsList != null && newsList.size() > 0){
             for (int i = newsList.size() - 1; i >= 0; i--){
-                News news = newsList.get(i);
+                NewsModel news = newsList.get(i);
                 if (!this.newsList.contains(news)){
                     this.newsList.add(0, news);
                     dataSetChanged = true;
+					count++;
                 }
             }
         }
         if (dataSetChanged){
             initDateHead();
         }
+		return count;
     }
 	
 	private void initDateHead() {
@@ -99,7 +101,7 @@ public class NewsAdapter extends BaseAdapter implements SectionIndexer, HeadList
 				continue;
 			}
 			if(i != newsList.size()){
-				if(!newsList.get(i).getPublishTime().equals(newsList.get(i - 1).getPublishTime())){
+				if(newsList.get(i).getPublishTime() != (newsList.get(i - 1).getPublishTime())){
 					mSections.add(DateTools.getSection(String.valueOf(newsList.get(i).getPublishTime())));
 					mPositions.add(i);
 				}
@@ -114,7 +116,7 @@ public class NewsAdapter extends BaseAdapter implements SectionIndexer, HeadList
 	}
 
 	@Override
-	public News getItem(int position) {
+	public NewsModel getItem(int position) {
 		// TODO Auto-generated method stub
 		if (newsList != null && newsList.size() != 0) {
 			return newsList.get(position);
@@ -165,18 +167,18 @@ public class NewsAdapter extends BaseAdapter implements SectionIndexer, HeadList
 			mHolder = (ViewHolder) view.getTag();
 		}
 		//获取position对应的数据
-		News news = getItem(position);
+		NewsModel news = getItem(position);
         Log.d(activity.getPackageName(), news.toString());
 		mHolder.item_title.setText(news.getTitle());
 		mHolder.item_source.setText(news.getSource());
 //		mHolder.comment_count.setText("评论" + news.getCommentNum());
-		mHolder.publish_time.setText(news.getPublishTime() + "小时前");
+		mHolder.publish_time.setText(DateTools.getPublishTimeString(news.getPublishTime()));
 		List<String> imgUrlList = news.getPicList();
 		mHolder.popicon.setVisibility(View.VISIBLE);
 //		mHolder.comment_count.setVisibility(View.VISIBLE);
 		mHolder.right_padding_view.setVisibility(View.VISIBLE);
 		if(imgUrlList !=null && imgUrlList.size() !=0){
-			if(imgUrlList.size() < 5){
+			if(imgUrlList.size() < 3){
 				mHolder.item_image_layout.setVisibility(View.GONE);
 				//是否是大图
 				if(news.getIsLarge()){
@@ -247,7 +249,7 @@ public class NewsAdapter extends BaseAdapter implements SectionIndexer, HeadList
 			mHolder.layout_list_section.setVisibility(View.VISIBLE);
 //			head_title.setText(news.getDate());
 			mHolder.section_text.setText(mSections.get(section));
-			mHolder.section_day.setText("今天");
+//			mHolder.section_day.setText("今天");
 		} else {
 			mHolder.layout_list_section.setVisibility(View.GONE);
 		}

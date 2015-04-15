@@ -135,18 +135,6 @@ public class MainActivity extends FragmentActivity {
 				}
 			}
 		});
-//		top_more.setOnClickListener(new OnClickListener() {
-//
-//			@Override
-//			public void onClick(View v) {
-//				// TODO Auto-generated method stub
-//				if(side_drawer.isSecondaryMenuShowing()){
-//					side_drawer.showContent();
-//				}else{
-//					side_drawer.showSecondaryMenu();
-//				}
-//			}
-//		});
 		setChangelView();
 	}
 	/** 
@@ -168,16 +156,13 @@ public class MainActivity extends FragmentActivity {
 	private void initTabColumn() {
 		mRadioGroup_content.removeAllViews();
 		int count =  userChannelList.size();
-//		mColumnHorizontalScrollView.setParam(this, mScreenWidth, mRadioGroup_content, shade_left, shade_right, ll_more_columns, rl_column);
         mColumnHorizontalScrollView.setParam(this, mScreenWidth, mRadioGroup_content, ll_more_columns, rl_column);
 		for(int i = 0; i< count; i++){
 			LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(mItemWidth , LayoutParams.WRAP_CONTENT);
 			params.leftMargin = 5;
 			params.rightMargin = 5;
-//			TextView localTextView = (TextView) mInflater.inflate(R.layout.column_radio_item, null);
 			TextView columnTextView = new TextView(this);
 			columnTextView.setTextAppearance(this, R.style.top_category_scroll_view_item_text);
-//			localTextView.setBackground(getResources().getDrawable(R.drawable.top_category_scroll_text_view_bg));
 			columnTextView.setBackgroundResource(R.drawable.radio_buttong_bg);
 			columnTextView.setGravity(Gravity.CENTER);
 			columnTextView.setPadding(5, 5, 5, 5);
@@ -325,4 +310,5 @@ public class MainActivity extends FragmentActivity {
 
         WBAuthHelper.onActivityResultWBAuthHelper(requestCode, resultCode, data);
 	}
+
 }

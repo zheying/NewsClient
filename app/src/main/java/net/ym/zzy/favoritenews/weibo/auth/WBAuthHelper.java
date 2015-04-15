@@ -20,8 +20,8 @@ import com.sina.weibo.sdk.net.RequestListener;
 import com.sina.weibo.sdk.utils.LogUtil;
 
 import net.ym.zzy.domain.entity.json.JsonBase;
-import net.ym.zzy.domain.respository.DataRespository;
-import net.ym.zzy.favorite.data.respository.DataResposityImpl;
+import net.ym.zzy.domain.respository.DataRepository;
+import net.ym.zzy.favorite.data.respository.DataReposityImpl;
 import net.ym.zzy.favoritenews.Constants;
 import net.ym.zzy.favoritenews.R;
 import net.ym.zzy.favoritenews.cache.AccessTokenKeeper;
@@ -162,8 +162,8 @@ public class WBAuthHelper {
 
                 if (user != null) {
                     AccessTokenKeeper.writeScreenName(context, user.screen_name);
-                    DataRespository dataRespository = DataResposityImpl.getInstance();
-                    dataRespository.login(context, mAccessToken.getUid(), user.screen_name, mAccessToken.getToken(), new DataRespository.ResponseCallback() {
+                    DataRepository dataRepository = DataReposityImpl.getInstance();
+                    dataRepository.login(context, mAccessToken.getUid(), user.screen_name, mAccessToken.getToken(), new DataRepository.ResponseCallback() {
                         @Override
                         public void onResponse(Serializable ser) {
                             JsonBase loginInfo = (JsonBase)ser;

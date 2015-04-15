@@ -1,11 +1,8 @@
 package net.ym.zzy.favorite.data.executor;
 
-import android.util.SparseArray;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -16,7 +13,8 @@ import java.util.concurrent.TimeUnit;
  */
 public class JobExecutor extends ThreadPoolExecutor{
 
-    HashMap<String, Future<?>> futures = new HashMap<String, Future<?>>();
+    ConcurrentHashMap<String, Future<?>> futures = new ConcurrentHashMap<String, Future<?>>();
+
 
     private static class LazyHolder{
         private static final JobExecutor INSTANCE = new JobExecutor(new LinkedBlockingQueue<Runnable>());

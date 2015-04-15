@@ -50,7 +50,7 @@ public class NewsDetailsService {
 		try {
 			document = Jsoup.connect(url)
                     .userAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.118 Safari/537.36")
-                    .timeout(9000)
+                    .timeout(15000)
                     .get();
             Log.d(AppApplication.getApp().getPackageName(), document.body().toString());
             FileOutputStream fos = AppApplication.getApp().openFileOutput("news.txt", Context.MODE_PRIVATE);

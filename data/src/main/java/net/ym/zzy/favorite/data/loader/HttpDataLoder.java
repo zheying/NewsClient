@@ -112,7 +112,8 @@ public class HttpDataLoder {
                     CacheManager.writeCacheObject(context, data, key);
                 }
             }catch (Exception ex){
-                Log.d(context.getPackageName(), "get data cause Exception!" + ex.getMessage());
+                ex.printStackTrace(System.err);
+                Log.d(context.getPackageName(), "get data cause Exception!");
                 data = (T)CacheManager.readCacheObject(context, key);
                 if (data == null){
                     throw ex;

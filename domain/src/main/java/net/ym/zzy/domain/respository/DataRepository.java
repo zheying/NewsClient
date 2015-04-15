@@ -9,7 +9,7 @@ import java.io.Serializable;
 /**
  * Created by zengzheying on 15/3/28.
  */
-public interface DataRespository {
+public interface DataRepository {
 
     public static final int PAGE_SIZE = 20;
 

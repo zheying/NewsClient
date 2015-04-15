@@ -26,9 +26,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 
-import net.ym.zzy.domain.entity.News;
 import net.ym.zzy.favoritenews.base.BaseActivity;
-import net.ym.zzy.favoritenews.bean.NewsEntity;
+import net.ym.zzy.favoritenews.mvp.model.NewsModel;
 import net.ym.zzy.favoritenews.service.NewsDetailsService;
 import net.ym.zzy.favoritenews.tool.DateTools;
 
@@ -42,7 +41,7 @@ public class DetailsActivity extends BaseActivity {
 	private String news_title;
 	private String news_source;
 	private String news_date;
-	private News news;
+	private NewsModel news;
 	private TextView action_comment_count;
 	WebView webView;
 	@Override
@@ -57,9 +56,9 @@ public class DetailsActivity extends BaseActivity {
 	}
 	/* 获取传递过来的数据 */
 	private void getData() {
-		news = (News) getIntent().getSerializableExtra("news");
-		news_url = news.getSource_url();
-//        news_url = Constants.HOST + "view_news/" + news.getId() + "/";
+		news = (NewsModel) getIntent().getSerializableExtra("news");
+//		news_url = news.getSource_url();
+        news_url = Constants.HOST + "view_news/" + news.getId() + "/";
 		news_title = news.getTitle();
 		news_source = news.getSource();
 		news_date = DateTools.getNewsDetailsDate(String.valueOf(news.getPublishTime()));
@@ -96,7 +95,7 @@ public class DetailsActivity extends BaseActivity {
 //		progressBar.setVisibility(View.VISIBLE);
 		title.setTextSize(13);
 		title.setVisibility(View.VISIBLE);
-		title.setText(news_url);
+//		title.setText(news_url);
 //		action_comment_count.setText(String.valueOf(news.getCommentNum()));
 	}
 
@@ -174,6 +173,7 @@ public class DetailsActivity extends BaseActivity {
 			addImageClickListner();
 			progressBar.setVisibility(View.GONE);
 			webView.setVisibility(View.VISIBLE);
+			title.setText(news_url);
 		}
 
 		@Override

@@ -140,7 +140,21 @@ public class DateTools {
 		re_StrTime = sdf.format(new Date(lcc_time * 1000L));
 		return re_StrTime;
 	}
-	
+
+	public static String getPublishTimeString(long publishTime){
+		long current = new Date().getTime() / 1000;
+		long delta = current - publishTime;
+		Log.d("test", current + " " + publishTime + " " + delta);
+		if (delta < 60 * 60){
+			return (delta < 60 ? 1 : delta / 60) + "分钟前";
+		}else if (delta < 60 * 60 * 24){
+			return delta / (60 * 60) + "小时前";
+		}else{
+			SimpleDateFormat sdf = new SimpleDateFormat("MM-dd HH:mm");
+			return sdf.format(new Date(publishTime + 1000L));
+		}
+	}
+
 //	public static String getTodayDate(){
 //		SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd");
 //		String nowTime=format.format(new Date());
