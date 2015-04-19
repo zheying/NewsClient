@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.view.inputmethod.InputMethodManager;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceResponse;
@@ -23,6 +24,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.webkit.WebSettings.LayoutAlgorithm;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -49,6 +51,9 @@ public class DetailsActivity extends BaseActivity {
 	private String news_date;
 	private NewsModel news;
 	private TextView action_comment_count;
+	private View actionWriteComment;
+	private EditText commentEditText;
+	private View commentLayout;
 	WebView webView;
 	private Oauth2AccessToken mAccessToken;
 	@Override
@@ -108,6 +113,10 @@ public class DetailsActivity extends BaseActivity {
 	}
 
 	private void initView() {
+		actionWriteComment = findViewById(R.id.action_write_comment);
+		commentLayout = findViewById(R.id.comment_layout);
+		commentEditText = (EditText)findViewById(R.id.comment);
+
 		title = (TextView) findViewById(R.id.title);
 		progressBar = (ProgressBar) findViewById(R.id.ss_htmlprogessbar);
 		customview_layout = (FrameLayout) findViewById(R.id.customview_layout);
@@ -119,6 +128,30 @@ public class DetailsActivity extends BaseActivity {
 		title.setVisibility(View.VISIBLE);
 //		title.setText(news_url);
 //		action_comment_count.setText(String.valueOf(news.getCommentNum()));
+
+		actionWriteComment.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				commentLayout.setVisibility(View.VISIBLE);
+				commentEditText.requestFocus();
+
+			}
+		});
+
+		commentEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				if (!hasFocus){
+					commentLayout.setVisibility(View.GONE);
+					InputMethodManager inputManager = (InputMethodManager)commentEditText.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+					inputManager.hideSoftInputFromWindow(commentEditText.getWindowToken(), 0);
+				}else {
+					commentLayout.setVisibility(View.VISIBLE);
+					InputMethodManager inputManager = (InputMethodManager)commentEditText.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+					inputManager.showSoftInput(commentEditText, 0);
+				}
+			}
+		});
 	}
 
 	@Override

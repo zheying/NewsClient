@@ -28,6 +28,7 @@
             layout="@layout/tool_bar" />
         <include
             android:id="@+id/comment_layout"
+            android:visibility="gone"
             layout="@layout/common_enter_emoji"/>
     </FrameLayout>
 
