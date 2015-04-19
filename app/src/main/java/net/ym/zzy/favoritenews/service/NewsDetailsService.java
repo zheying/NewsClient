@@ -71,15 +71,18 @@ public class NewsDetailsService {
                 Log.d(AppApplication.getApp().getPackageName(), "element : " + element.toString());
 			}
 			if (element != null) {
+                if (element.toString().trim().equals("")) return null;
                 Log.d(AppApplication.getApp().getPackageName(), element.toString());
 				data = data + element.toString();
 			}else{
                 Log.d(AppApplication.getApp().getPackageName(), "element == null");
+                return null;
             }
 			data = data + "</article></body></html>";
 		} catch (IOException e) {
             Log.d(AppApplication.getApp().getPackageName(), "jsoup exception");
 			e.printStackTrace(System.err);
+            return null;
 		}
 
         Log.d(AppApplication.getApp().getPackageName(), data);

@@ -96,6 +96,7 @@ public class HeadListView extends ListView {
 
 		case HeaderAdapter.HEADER_PUSHED_UP: {
 			View firstView = getChildAt(0);
+			if (firstView == null) return;
 			int bottom = firstView.getBottom();
 			int headerHeight = mHeaderView.getHeight();
 			int y;

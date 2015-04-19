@@ -13,9 +13,11 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -23,10 +25,14 @@ import android.webkit.WebSettings.LayoutAlgorithm;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
+import com.sina.weibo.sdk.auth.Oauth2AccessToken;
+
 import net.ym.zzy.favoritenews.base.BaseActivity;
+import net.ym.zzy.favoritenews.cache.AccessTokenKeeper;
 import net.ym.zzy.favoritenews.mvp.model.NewsModel;
 import net.ym.zzy.favoritenews.service.NewsDetailsService;
 import net.ym.zzy.favoritenews.tool.DateTools;
@@ -44,10 +50,14 @@ public class DetailsActivity extends BaseActivity {
 	private NewsModel news;
 	private TextView action_comment_count;
 	WebView webView;
+	private Oauth2AccessToken mAccessToken;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
+
+		mAccessToken = AccessTokenKeeper.readAccessToken(this);
+
 		setContentView(R.layout.details);
 		setNeedBackGesture(true);//设置需要手势监听
 		getData();
@@ -58,7 +68,11 @@ public class DetailsActivity extends BaseActivity {
 	private void getData() {
 		news = (NewsModel) getIntent().getSerializableExtra("news");
 //		news_url = news.getSource_url();
-        news_url = Constants.HOST + "view_news/" + news.getId() + "/";
+		if (mAccessToken == null || "".equals(mAccessToken.getUid())) {
+			news_url = Constants.HOST + "view_news/" + news.getId() + "/";
+		}else{
+			news_url = Constants.HOST + "view_news/" + news.getId() + "/?uid=" + mAccessToken.getUid();
+		}
 		news_title = news.getTitle();
 		news_source = news.getSource();
 		news_date = DateTools.getNewsDetailsDate(String.valueOf(news.getPublishTime()));
@@ -72,16 +86,24 @@ public class DetailsActivity extends BaseActivity {
 			settings.setJavaScriptEnabled(true);//设置可以运行JS脚本
 //			settings.setTextZoom(120);//Sets the text zoom of the page in percent. The default is 100.
 			settings.setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
-//			settings.setUseWideViewPort(true); //打开页面时， 自适应屏幕 
-//			settings.setLoadWithOverviewMode(true);//打开页面时， 自适应屏幕 
-			settings.setSupportZoom(false);// 用于设置webview放大
+
+			settings.setUseWideViewPort(true); //打开页面时， 自适应屏幕
+			settings.setLoadWithOverviewMode(true);//打开页面时， 自适应屏幕
+
+			settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
+			settings.setLayoutAlgorithm(LayoutAlgorithm.NARROW_COLUMNS);
+			settings.setLoadWithOverviewMode(true);
+
+			settings.setSupportZoom(true);// 用于设置webview放大
 			settings.setBuiltInZoomControls(false);
+			settings.setPluginState(WebSettings.PluginState.ON);
+			webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
 			webView.setBackgroundResource(R.color.transparent);
 			// 添加js交互接口类，并起别名 imagelistner
-			webView.addJavascriptInterface(new JavascriptInterface(getApplicationContext()),"imagelistner");
+			webView.addJavascriptInterface(new JavascriptInterface(getApplicationContext()), "imagelistner");
 			webView.setWebChromeClient(new MyWebChromeClient());
 			webView.setWebViewClient(new MyWebViewClient());
-			new MyAsnycTask().execute(news_url, news_title, news_source + " " +news_date);
+			webView.loadUrl(news_url);
 		}
 	}
 
@@ -101,22 +123,12 @@ public class DetailsActivity extends BaseActivity {
 
 	@Override
 	public void onBackPressed() {
+		if (webView != null){
+			webView.reload();
+			webView.onPause();
+		}
 		super.onBackPressed();
 		overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-	}
-	
-	private class MyAsnycTask extends AsyncTask<String, String,String>{
-
-		@Override
-		protected String doInBackground(String... urls) {
-			String data= NewsDetailsService.getNewsDetails(urls[0], urls[1], urls[2]);
-			return data;
-		}
-
-		@Override
-		protected void onPostExecute(String data) {
-			webView.loadDataWithBaseURL (null, data, "text/html", "utf-8",null);
-		}
 	}
 
 	// 注入js函数监听
@@ -158,8 +170,26 @@ public class DetailsActivity extends BaseActivity {
 		}
 	}
 
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		if (webView != null){
+			webView.reload();
+			webView.onPause();
+		}
+	}
+
 	// 监听
 	private class MyWebViewClient extends WebViewClient {
+
+		@Override
+		public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
+			WebResourceResponse response = null;
+			response = super.shouldInterceptRequest(view, url);
+			return response;
+		}
+
 		@Override
 		public boolean shouldOverrideUrlLoading(WebView view, String url) {
 			return super.shouldOverrideUrlLoading(view, url);
@@ -169,6 +199,7 @@ public class DetailsActivity extends BaseActivity {
 		public void onPageFinished(WebView view, String url) {
 			view.getSettings().setJavaScriptEnabled(true);
 			super.onPageFinished(view, url);
+			Log.d("URL", url);
 			// html加载完成之后，添加监听图片的点击js函数
 			addImageClickListner();
 			progressBar.setVisibility(View.GONE);
@@ -191,6 +222,7 @@ public class DetailsActivity extends BaseActivity {
 	}
 	
 	private class MyWebChromeClient extends WebChromeClient {
+
 		@Override
 		public void onProgressChanged(WebView view, int newProgress) {
 			// TODO Auto-generated method stub
@@ -200,4 +232,5 @@ public class DetailsActivity extends BaseActivity {
 			super.onProgressChanged(view, newProgress);
 		}
 	}
+
 }

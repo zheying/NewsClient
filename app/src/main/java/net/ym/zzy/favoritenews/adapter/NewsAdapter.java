@@ -101,7 +101,13 @@ public class NewsAdapter extends BaseAdapter implements SectionIndexer, HeadList
 				continue;
 			}
 			if(i != newsList.size()){
-				if(newsList.get(i).getPublishTime() != (newsList.get(i - 1).getPublishTime())){
+//				if(!DateTools.getPublishTimeString(newsList.get(i).getPublishTime()).trim().equals(
+//						DateTools.getPublishTimeString(newsList.get(i - 1).getPublishTime()).trim())){
+				if (!DateTools.isSameDay(newsList.get(i).getPublishTime(), newsList.get(i).getPublishTime())){
+					Log.d("TestString", DateTools.getSection(String.valueOf(newsList.get(i).getPublishTime())) +
+					"==" + DateTools.getSection(String.valueOf(newsList.get(i).getPublishTime())) + "?" +
+							DateTools.getPublishTimeString(newsList.get(i).getPublishTime()).trim().equals(
+									DateTools.getPublishTimeString(newsList.get(i - 1).getPublishTime()).trim()));
 					mSections.add(DateTools.getSection(String.valueOf(newsList.get(i).getPublishTime())));
 					mPositions.add(i);
 				}

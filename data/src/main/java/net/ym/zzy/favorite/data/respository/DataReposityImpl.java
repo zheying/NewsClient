@@ -17,8 +17,8 @@ import java.util.HashMap;
  */
 public class DataReposityImpl implements DataRepository {
 
-    private final String HOST = "http://192.168.202.202:8000/";
-//    private final String HOST = "http://120.25.217.247:8000/";
+//    private final String HOST = "http://192.168.202.202:8000/";
+    private final String HOST = "http://120.25.217.247:8000/";
 
     private static DataRepository mInstance;
 

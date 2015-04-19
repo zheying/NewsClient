@@ -1,9 +1,11 @@
 package net.ym.zzy.favoritenews.tool;
 
+import java.sql.SQLOutput;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 import android.text.TextUtils;
 import android.util.Log;
@@ -153,6 +155,18 @@ public class DateTools {
 			SimpleDateFormat sdf = new SimpleDateFormat("MM-dd HH:mm");
 			return sdf.format(new Date(publishTime + 1000L));
 		}
+	}
+
+	public static boolean isSameDay(long time, long otherTime){
+		Date date = new Date(time * 1000);
+		Date otherDate = new Date(otherTime * 1000);
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		Calendar otherCalendar = Calendar.getInstance();
+		otherCalendar.setTime(otherDate);
+		return calendar.get(Calendar.YEAR) == otherCalendar.get(Calendar.YEAR)
+				&& calendar.get(Calendar.MONTH) == otherCalendar.get(Calendar.MONTH)
+				&& calendar.get(Calendar.DAY_OF_MONTH) == otherCalendar.get(Calendar.DAY_OF_MONTH);
 	}
 
 //	public static String getTodayDate(){
