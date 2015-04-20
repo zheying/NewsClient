@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 
+import net.ym.zzy.domain.entity.json.CommentListJson;
 import net.ym.zzy.domain.entity.json.JsonBase;
 import net.ym.zzy.domain.entity.json.NewsJson;
 import net.ym.zzy.domain.respository.DataRepository;
@@ -35,7 +36,7 @@ public class DataReposityImpl implements DataRepository {
     public void getNewsList(final Context context,final int catalog,final int pageIndex,final boolean isRefresh,final ResponseCallback callback){
         final String key = "newslist_" + catalog + "_" + pageIndex + "_" + PAGE_SIZE;
         JobExecutor.getInstance().cancel(key);
-        final HashMap<String, String> params = new HashMap<String, String>();
+        final HashMap<String, String> params = new HashMap<>();
         params.put("cat", String.valueOf(catalog));
         params.put("page", String.valueOf(pageIndex));
         Runnable loader = new Runnable() {
@@ -69,7 +70,7 @@ public class DataReposityImpl implements DataRepository {
             @Override
             public void run() {
                 try{
-                    HashMap<String, String> params = new HashMap<String, String>();
+                    HashMap<String, String> params = new HashMap<>();
                     params.put("uid", uid);
                     params.put("name", name);
                     params.put("token", token);
@@ -91,5 +92,98 @@ public class DataReposityImpl implements DataRepository {
             }
         };
         JobExecutor.getInstance().submit(loader, "login");
+    }
+
+    @Override
+    public void commentNews(final Context context, final String uid, final String token, final int newsId, final String content, final ResponseCallback callback) {
+        Runnable loader = new Runnable() {
+            @Override
+            public void run() {
+                try{
+                    HashMap<String, String> params = new HashMap<>();
+                    params.put("uid", uid);
+                    params.put("news_id", Integer.toString(newsId));
+                    params.put("content", content);
+                    params.put("token", token);
+                    final JsonBase info = HttpDataLoder.getDataByPostMethodNotCache(context, HOST + "comment/", params, null, JsonBase.class);
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            callback.onResponse(info);
+                        }
+                    });
+                }catch (final Exception ex){
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            callback.onException(ex);
+                        }
+                    });
+                }
+            }
+        };
+        JobExecutor.getInstance().submit(loader, "commentNews");
+    }
+
+    @Override
+    public void pullComments(final Context context, final String uid, final String token, final int newsId, final ResponseCallback callback) {
+        Runnable loader = new Runnable() {
+            @Override
+            public void run() {
+                try{
+                    HashMap<String, String> params = new HashMap<>();
+                    params.put("uid", uid);
+                    params.put("news_id", Integer.toString(newsId));
+                    params.put("token", token);
+                    final CommentListJson commentListJson = HttpDataLoder.getDataByPostMethodNotCache(context, HOST + "pull_comments/", params, null, CommentListJson.class);
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            callback.onResponse(commentListJson);
+                        }
+                    });
+                }catch (final Exception ex){
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            callback.onException(ex);
+                        }
+                    });
+                }
+            }
+        };
+
+        JobExecutor.getInstance().submit(loader, "pullComments");
+    }
+
+    @Override
+    public void deleteComment(final Context context, final String uid, final String token, final int cid, final ResponseCallback callback) {
+        Runnable loader = new Runnable() {
+            @Override
+            public void run() {
+                try{
+                    HashMap<String, String> params = new HashMap<>();
+                    params.put("uid", uid);
+                    params.put("token", token);
+                    params.put("cid", Integer.toString(cid));
+                    final JsonBase info = HttpDataLoder.getDataByPostMethodNotCache(context, HOST + "delete_comment/", params, null, JsonBase.class);
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            callback.onResponse(info);
+                        }
+                    });
+                }catch (final Exception ex){
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            callback.onException(ex);
+                        }
+                    });
+                }
+            }
+        };
+
+        JobExecutor.getInstance().submit(loader, "deleteComment");
     }
 }
