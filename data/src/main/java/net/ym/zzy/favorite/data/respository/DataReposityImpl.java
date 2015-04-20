@@ -48,7 +48,11 @@ public class DataReposityImpl implements DataRepository {
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
-                            callback.onResponse(newsJson);
+                            if (newsJson.getCode() == 0){
+                                callback.onResponse(newsJson);
+                            }else {
+                                callback.onResponseError(newsJson);
+                            }
                         }
                     });
                 }catch (final Exception e){
@@ -78,7 +82,11 @@ public class DataReposityImpl implements DataRepository {
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
-                            callback.onResponse(info);
+                            if (info.getCode() == 0) {
+                                callback.onResponse(info);
+                            }else {
+                                callback.onResponseError(info);
+                            }
                         }
                     });
                 }catch (final Exception ex){
@@ -109,7 +117,11 @@ public class DataReposityImpl implements DataRepository {
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
-                            callback.onResponse(info);
+                            if (info.getCode() == 0) {
+                                callback.onResponse(info);
+                            }else {
+                                callback.onResponseError(info);
+                            }
                         }
                     });
                 }catch (final Exception ex){
@@ -139,7 +151,11 @@ public class DataReposityImpl implements DataRepository {
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
-                            callback.onResponse(commentListJson);
+                            if (commentListJson.getCode() == 0) {
+                                callback.onResponse(commentListJson);
+                            }else {
+                                callback.onResponseError(commentListJson);
+                            }
                         }
                     });
                 }catch (final Exception ex){
@@ -170,7 +186,11 @@ public class DataReposityImpl implements DataRepository {
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
-                            callback.onResponse(info);
+                            if (info.getCode() == 0) {
+                                callback.onResponse(info);
+                            }else {
+                                callback.onResponseError(info);
+                            }
                         }
                     });
                 }catch (final Exception ex){

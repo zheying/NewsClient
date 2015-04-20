@@ -28,9 +28,14 @@ public class NewsListInteractorImpl implements NewsListInteractor {
                     NewsJson newsJson = (NewsJson)ser;
                     if (newsJson != null && newsJson.getCode() == 0) {
                         callback.onLoadDataSuccessfully(newsJson.getData().getNewsList());
-                    }else {
-                        callback.onLoadDataError();
                     }
+                }
+            }
+
+            @Override
+            public void onResponseError(Serializable errInfo) {
+                if (callback != null){
+                    callback.onLoadDataError();
                 }
             }
 

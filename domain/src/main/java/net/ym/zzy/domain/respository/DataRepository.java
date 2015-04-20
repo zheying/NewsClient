@@ -15,6 +15,7 @@ public interface DataRepository {
 
     public interface ResponseCallback{
         void onResponse(Serializable ser);
+        void onResponseError(Serializable errInfo);
         void onException(Exception ex);
     }
 
