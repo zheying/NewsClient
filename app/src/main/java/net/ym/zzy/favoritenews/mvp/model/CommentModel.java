@@ -1,28 +1,20 @@
-package net.ym.zzy.domain.entity;
-
-import com.google.gson.annotations.SerializedName;
+package net.ym.zzy.favoritenews.mvp.model;
 
 /**
- * Created by zengzheying on 15/4/20.
+ * Created by zengzheying on 15/4/24.
  */
-public class Comment {
+public class CommentModel implements Model{
 
-    @SerializedName("cid")
     private int cid;
 
-    @SerializedName("user_name")
     private String userName;
 
-    @SerializedName("time")
     private long commentTime;
 
-    @SerializedName("content")
     private String commentContent;
 
-    @SerializedName("avatar")
     private String avatarUrl;
 
-    @SerializedName("uid")
     private String uid;
 
     public String getUserName() {
@@ -73,4 +65,12 @@ public class Comment {
         this.cid = cid;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof CommentModel))
+            return false;
+        if (o == this)
+            return true;
+        return ((CommentModel)o).getCid() == cid;
+    }
 }

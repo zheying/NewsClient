@@ -2,10 +2,52 @@
 <items version="2" >
 
     <item
+        jar="/Users/zengzheying/develop/NewsClient/app/build/intermediates/exploded-aar/NewsClient/weibosdk/unspecified/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="e2430810fd1e85cf32c3045ce3802ebafd26c907">
+        <dex dex="/Users/zengzheying/develop/NewsClient/app/build/intermediates/pre-dexed/debug/classes-9f8ee8d0eb8c8f64b43da29567e735eaa430abcb.jar" />
+    </item>
+    <item
+        jar="/Users/zengzheying/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.2.4/a60a5e993c98c864010053cb901b7eab25306568/gson-2.2.4.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="a60a5e993c98c864010053cb901b7eab25306568">
+        <dex dex="/Users/zengzheying/develop/NewsClient/app/build/intermediates/pre-dexed/debug/gson-2.2.4-42679ebab7b1ad08439b305aca73d86b9f3c4f8c.jar" />
+    </item>
+    <item
+        jar="/Users/zengzheying/develop/NewsClient/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.0.0/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="d84409890828e07d344a3b9b1da545dba9897b51">
+        <dex dex="/Users/zengzheying/develop/NewsClient/app/build/intermediates/pre-dexed/debug/classes-911ba2d35752a3a582b4e8cbe12548861c79d69c.jar" />
+    </item>
+    <item
+        jar="/Users/zengzheying/develop/NewsClient/app/build/intermediates/exploded-aar/NewsClient/SlidingMenu/unspecified/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="e9ecdd809947aa4708c43c01e20c59a350b34e88">
+        <dex dex="/Users/zengzheying/develop/NewsClient/app/build/intermediates/pre-dexed/debug/classes-80b981e25148282b4b3141e4f0b3eaf557d41600.jar" />
+    </item>
+    <item
+        jar="/Users/zengzheying/develop/NewsClient/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.0.0/libs/internal_impl-22.0.0.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="b5b92f469d515a13d778900f6d50c03d12f35504">
+        <dex dex="/Users/zengzheying/develop/NewsClient/app/build/intermediates/pre-dexed/debug/internal_impl-22.0.0-33fe688085331fbd35b01a3aa7400047a121a82e.jar" />
+    </item>
+    <item
+        jar="/Users/zengzheying/develop/NewsClient/app/libs/universal-image-loader-1.9.2-SNAPSHOT-with-sources.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="e33324b770223932d467e4ec39639b0c15f3b94e">
+        <dex dex="/Users/zengzheying/develop/NewsClient/app/build/intermediates/pre-dexed/debug/universal-image-loader-1.9.2-SNAPSHOT-with-sources-ea8b37803c659a5421086e8bb7419b5894189d3f.jar" />
+    </item>
+    <item
         jar="/Users/zengzheying/develop/NewsClient/app/build/intermediates/exploded-aar/NewsClient/data/unspecified/classes.jar"
         jumboMode="false"
         revision="21.1.2"
-        sha1="4318d6ab6fa93386ba1932c694a6634c18ee9491">
+        sha1="50a2980ec4aae81bd385dc57262c1313795445cd">
         <dex dex="/Users/zengzheying/develop/NewsClient/app/build/intermediates/pre-dexed/debug/classes-937b4be4ff271b3838ec05b6638dd1446bca6b61.jar" />
     </item>
     <item
@@ -16,39 +58,18 @@
         <dex dex="/Users/zengzheying/develop/NewsClient/app/build/intermediates/pre-dexed/debug/weibosdkcore-405d39db36930760be2f1ae14060934eaafc779b.jar" />
     </item>
     <item
-        jar="/Users/zengzheying/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.2.4/a60a5e993c98c864010053cb901b7eab25306568/gson-2.2.4.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="a60a5e993c98c864010053cb901b7eab25306568">
-        <dex dex="/Users/zengzheying/develop/NewsClient/app/build/intermediates/pre-dexed/debug/gson-2.2.4-42679ebab7b1ad08439b305aca73d86b9f3c4f8c.jar" />
-    </item>
-    <item
-        jar="/Users/zengzheying/develop/NewsClient/app/build/intermediates/exploded-aar/NewsClient/weibosdk/unspecified/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="ee1bf83df608cf25454e5dc60605358720065969">
-        <dex dex="/Users/zengzheying/develop/NewsClient/app/build/intermediates/pre-dexed/debug/classes-9f8ee8d0eb8c8f64b43da29567e735eaa430abcb.jar" />
-    </item>
-    <item
-        jar="/Users/zengzheying/develop/NewsClient/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.0.0/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="d84409890828e07d344a3b9b1da545dba9897b51">
-        <dex dex="/Users/zengzheying/develop/NewsClient/app/build/intermediates/pre-dexed/debug/classes-911ba2d35752a3a582b4e8cbe12548861c79d69c.jar" />
-    </item>
-    <item
         jar="/Users/zengzheying/develop/NewsClient/app/build/intermediates/exploded-aar/NewsClient/domain/unspecified/classes.jar"
         jumboMode="false"
         revision="21.1.2"
-        sha1="0aa262a9b13f3a28c9b0cc230fe0c7236dc462a4">
+        sha1="71bb7b2b46b7f9166312c5550e620ee1eeb7f887">
         <dex dex="/Users/zengzheying/develop/NewsClient/app/build/intermediates/pre-dexed/debug/classes-04d266b7d612af5d9645517362adcf165f1e0ded.jar" />
     </item>
     <item
-        jar="/Users/zengzheying/develop/NewsClient/app/build/intermediates/exploded-aar/NewsClient/SlidingMenu/unspecified/classes.jar"
+        jar="/Users/zengzheying/Applications/android-sdk-macosx/extras/android/m2repository/com/android/support/support-annotations/22.0.0/support-annotations-22.0.0.jar"
         jumboMode="false"
         revision="21.1.2"
-        sha1="a55bf2a29111875a6645ab47f13eaffe49da64ad">
-        <dex dex="/Users/zengzheying/develop/NewsClient/app/build/intermediates/pre-dexed/debug/classes-80b981e25148282b4b3141e4f0b3eaf557d41600.jar" />
+        sha1="685d0b2c590447e85284ed84712cb363ba04eff8">
+        <dex dex="/Users/zengzheying/develop/NewsClient/app/build/intermediates/pre-dexed/debug/support-annotations-22.0.0-e4ed00e6b1af0fdf6a4bfa38cb96d6f9bbf1fe84.jar" />
     </item>
     <item
         jar="/Users/zengzheying/develop/NewsClient/app/libs/jsoup-1.8.1.jar"
@@ -58,25 +79,11 @@
         <dex dex="/Users/zengzheying/develop/NewsClient/app/build/intermediates/pre-dexed/debug/jsoup-1.8.1-045e3a94dbdf5be053ddc08d2156de7bb8393a49.jar" />
     </item>
     <item
-        jar="/Users/zengzheying/develop/NewsClient/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.0.0/libs/internal_impl-22.0.0.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="b5b92f469d515a13d778900f6d50c03d12f35504">
-        <dex dex="/Users/zengzheying/develop/NewsClient/app/build/intermediates/pre-dexed/debug/internal_impl-22.0.0-33fe688085331fbd35b01a3aa7400047a121a82e.jar" />
-    </item>
-    <item
         jar="/Users/zengzheying/develop/NewsClient/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.0.0/classes.jar"
         jumboMode="false"
         revision="21.1.2"
         sha1="4e86306289ace4aa0cfec44a05ed2b410d36989d">
         <dex dex="/Users/zengzheying/develop/NewsClient/app/build/intermediates/pre-dexed/debug/classes-11b7446115cda1da343e3cd9484ae7c3018568af.jar" />
-    </item>
-    <item
-        jar="/Users/zengzheying/develop/NewsClient/app/libs/universal-image-loader-1.9.2-SNAPSHOT-with-sources.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="e33324b770223932d467e4ec39639b0c15f3b94e">
-        <dex dex="/Users/zengzheying/develop/NewsClient/app/build/intermediates/pre-dexed/debug/universal-image-loader-1.9.2-SNAPSHOT-with-sources-ea8b37803c659a5421086e8bb7419b5894189d3f.jar" />
     </item>
 
 </items>

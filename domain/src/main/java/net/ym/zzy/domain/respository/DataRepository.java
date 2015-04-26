@@ -21,7 +21,7 @@ public interface DataRepository {
 
     public void getNewsList(Context context, int catalog, int pageIndex, boolean isRefresh, ResponseCallback callback);
 
-    public void login(Context context, String uid, String name, String token, ResponseCallback callback);
+    public void login(Context context, String uid, String name, String token, String avatar, ResponseCallback callback);
 
     public void commentNews(Context context, String uid, String token, int newsId, String content, ResponseCallback callback);
 

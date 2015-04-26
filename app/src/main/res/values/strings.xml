@@ -59,6 +59,9 @@
     <string name="city_category_list_hint">选择城市，立即查看本地新闻</string>
     <string name="city_category_list_notify_no_city">请先选择您关注的城市</string>
     <string name="retry_large_image"><u>加载失败，点击重试</u></string>
+    <string name="loding">加载中……</string>
+    <string name="no_comments">快来抢沙发吧</string>
+    <string name="click_screen_to_retry">加载失败，请点击屏幕重试</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

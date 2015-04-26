@@ -22,14 +22,16 @@
             android:gravity="center_vertical"
             android:orientation="horizontal" >
 
-            <ImageView
+            <net.ym.zzy.favoritenews.view.CircleImageView
                 android:id="@+id/avatar"
                 android:layout_width="@dimen/left_drawer_avatar_size"
                 android:layout_height="@dimen/left_drawer_avatar_size"
                 android:layout_marginLeft="32.0dip"
                 android:layout_marginRight="16.0dip"
-                android:background="@drawable/round_avatar_bg"
-                android:padding="1.0dip" />
+                android:src="@drawable/default_round_head"
+                android:padding="1.0dip"
+                myapp:border_width="1dp"
+                myapp:border_color="@color/white"/>
 
             <TextView
                 android:id="@+id/user_name"
@@ -69,7 +71,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30.0dip"
                 android:layout_marginRight="30.0dip"
-                android:src="@drawable/ic_drawer_weibo" />
+                android:background="@drawable/bg_weibo_login"/>
 
             <!--<ImageView-->
                 <!--android:id="@+id/tencent_btn"-->

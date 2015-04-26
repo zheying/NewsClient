@@ -53,6 +53,9 @@ public class News implements Serializable{
     /** 感兴趣状态 */
     private boolean interestedStatus;
 
+    @SerializedName("comment_count")
+    private int commentCount;
+
     @Override
     public String toString() {
         return "id:     " + getId() + "\n" +
@@ -241,5 +244,12 @@ public class News implements Serializable{
     }
 
 
+    public int getCommentCount() {
+        return commentCount;
+    }
+
+    public void setCommentCount(int commentCount) {
+        this.commentCount = commentCount;
+    }
 
 }

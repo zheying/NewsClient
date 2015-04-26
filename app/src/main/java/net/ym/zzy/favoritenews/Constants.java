@@ -5,9 +5,9 @@ package net.ym.zzy.favoritenews;
  */
 public interface Constants {
 
-//    public static String HOST = "http://192.168.202.202:8000/";
+    public static String HOST = "http://192.168.202.202:8000/";
 //    public static String HOST = "http://120.25.217.247:8000/";
-    public static String HOST = "http://120.25.217.247:81/";
+//    public static String HOST = "http://120.25.217.247:81/";
 
     public static final String WEIBO_APP_KEY = "942411083";
 

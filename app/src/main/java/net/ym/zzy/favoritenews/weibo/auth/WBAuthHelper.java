@@ -162,19 +162,25 @@ public class WBAuthHelper {
 
                 if (user != null) {
                     AccessTokenKeeper.writeScreenName(context, user.screen_name);
+                    AccessTokenKeeper.writeAvatar(context, user.avatar_large);
                     DataRepository dataRepository = DataReposityImpl.getInstance();
-                    dataRepository.login(context, mAccessToken.getUid(), user.screen_name, mAccessToken.getToken(), new DataRepository.ResponseCallback() {
+
+//                    Log.d("avatar", "image_url:" + user.profile_image_url);
+//                    Log.d("avatar", "avatar hd:" + user.avatar_hd);
+//                    Log.d("avatar", "avatar large:" + user.avatar_large);
+
+                    dataRepository.login(context, mAccessToken.getUid(), user.screen_name, mAccessToken.getToken(), user.avatar_large, new DataRepository.ResponseCallback() {
                         @Override
                         public void onResponse(Serializable ser) {
-                            JsonBase loginInfo = (JsonBase)ser;
-                            if (loginInfo.getCode() == 0){
-                                Toast.makeText(context, "登陆成功", Toast.LENGTH_SHORT).show();
-                                if (mAuthorCallback != null){
-                                    mAuthorCallback.onComplete();
-                                }
-                            }else {
-                                Toast.makeText(context, "登陆失败" + loginInfo.getMsg(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, "登陆成功", Toast.LENGTH_SHORT).show();
+                            if (mAuthorCallback != null) {
+                                mAuthorCallback.onComplete();
                             }
+                        }
+
+                        @Override
+                        public void onResponseError(Serializable errInfo) {
+                            Toast.makeText(context, "登陆失败" + ((JsonBase) errInfo).getMsg(), Toast.LENGTH_SHORT).show();
                         }
 
                         @Override

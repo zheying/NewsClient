@@ -232,7 +232,8 @@
 
     <color name="activity_bg_color">#fff5f5f5</color>
     <color name="activity_bg_color_night">#ff1a1a1a</color>
-    <color name="detail_activity_bg_color">#fff6f7f7</color>
+    <!--<color name="detail_activity_bg_color">#fff6f7f7</color>-->
+    <color name="detail_activity_bg_color">#ffdcdcdc</color>
     <color name="detail_activity_bg_color_night">#ff1a1a1a</color>
     <color name="item_ad_download_bg_normal">#e5eeeeee</color>
     <color name="item_ad_download_bg_pressed">#e5f9f9f9</color>

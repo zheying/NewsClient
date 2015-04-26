@@ -2,6 +2,7 @@ package net.ym.zzy.favoritenews.view;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.CompoundButton;
@@ -13,10 +14,14 @@ import android.widget.Toast;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu.OnClosedListener;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 
 import net.ym.zzy.favoritenews.R;
 import net.ym.zzy.favoritenews.SettingsActivity;
 import net.ym.zzy.favoritenews.cache.AccessTokenKeeper;
+import net.ym.zzy.favoritenews.tool.Options;
 import net.ym.zzy.favoritenews.weibo.auth.AuthorCallback;
 import net.ym.zzy.favoritenews.weibo.auth.WBAuthHelper;
 
@@ -36,42 +41,19 @@ public class DrawerView implements OnClickListener{
     private ImageView avatar;  //用户头像
     private TextView user_name; //用户昵称
 
+    private Oauth2AccessToken mAccessToken;
+
+    private ImageLoader mImageLoader = ImageLoader.getInstance();
+    private DisplayImageOptions mOptions;
+
     public DrawerView(Activity activity) {
         this.activity = activity;
+
+        mAccessToken = AccessTokenKeeper.readAccessToken(activity);
+        mOptions = Options.getListOptions();
+        Log.d("Avatar", "avatar:" + AccessTokenKeeper.readAvatar(activity));
     }
-    /*
-        public SlidingMenu initSlidingMenu() {
-            localSlidingMenu = new SlidingMenu(activity);
-            localSlidingMenu.setMode(SlidingMenu.LEFT_RIGHT);//设置左右滑菜单
-            localSlidingMenu.setTouchModeAbove(SlidingMenu.SLIDING_WINDOW);//设置要使菜单滑动，触碰屏幕的范围
-    //		localSlidingMenu.setTouchModeBehind(SlidingMenu.SLIDING_CONTENT);//设置了这个会获取不到菜单里面的焦点，所以先注释掉
-            localSlidingMenu.setShadowWidthRes(R.dimen.shadow_width);//设置阴影图片的宽度
-            localSlidingMenu.setShadowDrawable(R.drawable.shadow);//设置阴影图片
-            localSlidingMenu.setBehindOffsetRes(R.dimen.slidingmenu_offset);//SlidingMenu划出时主页面显示的剩余宽度
-            localSlidingMenu.setFadeDegree(0.35F);//SlidingMenu滑动时的渐变程度
-            localSlidingMenu.attachToActivity(activity, SlidingMenu.RIGHT);//使SlidingMenu附加在Activity右边
-    //		localSlidingMenu.setBehindWidthRes(R.dimen.left_drawer_avatar_size);//设置SlidingMenu菜单的宽度
-            localSlidingMenu.setMenu(R.layout.left_drawer_fragment);//设置menu的布局文件
-    //		localSlidingMenu.toggle();//动态判断自动关闭或开启SlidingMenu
-            localSlidingMenu.setSecondaryMenu(R.layout.profile_drawer_right);
-            localSlidingMenu.setSecondaryShadowDrawable(R.drawable.shadowright);
-            localSlidingMenu.setOnOpenedListener(new SlidingMenu.OnOpenedListener() {
-                        public void onOpened() {
 
-                        }
-                    });
-            localSlidingMenu.setOnClosedListener(new OnClosedListener() {
-
-                @Override
-                public void onClosed() {
-                    // TODO Auto-generated method stub
-
-                }
-            });
-            initView();
-            return localSlidingMenu;
-        }
-    */
     public SlidingMenu initSlidingMenu() {
         localSlidingMenu = new SlidingMenu(activity);
         localSlidingMenu.setMode(SlidingMenu.LEFT);//设置左右滑菜单
@@ -123,6 +105,8 @@ public class DrawerView implements OnClickListener{
 //			night_mode_text.setText(activity.getResources().getString(R.string.action_day_mode));
 //		}
 
+
+
         login_layout = localSlidingMenu.findViewById(R.id.login_layout);
         logout_layout = localSlidingMenu.findViewById(R.id.logout_layout);
         weibo_login = localSlidingMenu.findViewById(R.id.weibo_btn);
@@ -133,6 +117,20 @@ public class DrawerView implements OnClickListener{
 
         setting_btn =(RelativeLayout)localSlidingMenu.findViewById(R.id.setting_btn);
         setting_btn.setOnClickListener(this);
+
+        if (mAccessToken.isSessionValid()){
+            logout_layout.setVisibility(View.GONE);
+            login_layout.setVisibility(View.VISIBLE);
+            user_name.setText(AccessTokenKeeper.readScreenName(activity));
+            mImageLoader.displayImage(AccessTokenKeeper.readAvatar(activity), avatar, mOptions);
+
+        }else{
+            logout_layout.setVisibility(View.VISIBLE);
+            login_layout.setVisibility(View.GONE);
+            user_name.setText("");
+        }
+
+        Log.d("Avatar", "avatar:" + AccessTokenKeeper.readAvatar(activity));
     }
 
     @Override
@@ -147,9 +145,11 @@ public class DrawerView implements OnClickListener{
                 WBAuthHelper.authorizeWBAuthHelper(new AuthorCallback() {
                     @Override
                     public void onComplete() {
+                        mAccessToken = AccessTokenKeeper.readAccessToken(activity);
                         logout_layout.setVisibility(View.GONE);
                         login_layout.setVisibility(View.VISIBLE);
                         user_name.setText(AccessTokenKeeper.readScreenName(activity));
+                        mImageLoader.displayImage(AccessTokenKeeper.readAvatar(activity), avatar, mOptions);
                     }
 
                     @Override

@@ -186,8 +186,9 @@ public class NewsFragment extends Fragment implements NewsListView{
 						}
 					}
 				});
-
-				initNotify(count);
+				if (count > 0) {
+					initNotify(count);
+				}
 				break;
 			default:
 				break;
@@ -264,7 +265,7 @@ public class NewsFragment extends Fragment implements NewsListView{
 	}
 
 	@Override
-	public void sendData() {
+	public void onSendingData() {
 
 	}
 

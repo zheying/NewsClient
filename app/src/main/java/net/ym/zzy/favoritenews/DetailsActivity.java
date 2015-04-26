@@ -29,18 +29,27 @@ import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
+import com.sina.weibo.sdk.api.share.BaseRequest;
+import com.sina.weibo.sdk.api.share.BaseResponse;
+import com.sina.weibo.sdk.api.share.IWeiboHandler;
 import com.sina.weibo.sdk.auth.Oauth2AccessToken;
+import com.sina.weibo.sdk.constant.WBConstants;
 
 import net.ym.zzy.favoritenews.base.BaseActivity;
 import net.ym.zzy.favoritenews.cache.AccessTokenKeeper;
+import net.ym.zzy.favoritenews.mvp.model.Model;
 import net.ym.zzy.favoritenews.mvp.model.NewsModel;
+import net.ym.zzy.favoritenews.mvp.presenter.CommentPresenter;
+import net.ym.zzy.favoritenews.mvp.view.CommentView;
 import net.ym.zzy.favoritenews.service.NewsDetailsService;
 import net.ym.zzy.favoritenews.tool.DateTools;
+import net.ym.zzy.favoritenews.weibo.auth.WBShareHelper;
 
 @SuppressLint("JavascriptInterface")
-public class DetailsActivity extends BaseActivity {
+public class DetailsActivity extends BaseActivity implements CommentView, IWeiboHandler.Response{
 
 	private TextView title;
 	private ProgressBar progressBar;
@@ -52,10 +61,17 @@ public class DetailsActivity extends BaseActivity {
 	private NewsModel news;
 	private TextView action_comment_count;
 	private View actionWriteComment;
+	private View actionViewComment;
 	private EditText commentEditText;
 	private View commentLayout;
+	private View actionRepost;
 	WebView webView;
 	private Oauth2AccessToken mAccessToken;
+	private CommentPresenter mCommentPresenter;
+	private View sendText;
+
+	private WBShareHelper mWBShareHelper;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -68,6 +84,12 @@ public class DetailsActivity extends BaseActivity {
 		getData();
 		initView();
 		initWebView();
+		mCommentPresenter = new CommentPresenter(this);
+
+		mWBShareHelper = new WBShareHelper(this);
+		if (savedInstanceState != null) {
+			mWBShareHelper.handleWeiboResponse(getIntent(), this);
+		}
 	}
 	/* 获取传递过来的数据 */
 	private void getData() {
@@ -114,8 +136,12 @@ public class DetailsActivity extends BaseActivity {
 
 	private void initView() {
 		actionWriteComment = findViewById(R.id.action_write_comment);
+		actionViewComment = findViewById(R.id.action_view_comment);
 		commentLayout = findViewById(R.id.comment_layout);
 		commentEditText = (EditText)findViewById(R.id.comment);
+		sendText = findViewById(R.id.sendText);
+
+		actionRepost = findViewById(R.id.action_repost);
 
 		title = (TextView) findViewById(R.id.title);
 		progressBar = (ProgressBar) findViewById(R.id.ss_htmlprogessbar);
@@ -127,7 +153,7 @@ public class DetailsActivity extends BaseActivity {
 		title.setTextSize(13);
 		title.setVisibility(View.VISIBLE);
 //		title.setText(news_url);
-//		action_comment_count.setText(String.valueOf(news.getCommentNum()));
+		action_comment_count.setText(String.valueOf(news.getCommentCount()));
 
 		actionWriteComment.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -138,20 +164,67 @@ public class DetailsActivity extends BaseActivity {
 			}
 		});
 
+		actionViewComment.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(DetailsActivity.this, CommentListActivity.class);
+				intent.putExtra("news", news);
+				startActivity(intent);
+			}
+		});
+
 		commentEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
-				if (!hasFocus){
+				if (!hasFocus) {
 					commentLayout.setVisibility(View.GONE);
-					InputMethodManager inputManager = (InputMethodManager)commentEditText.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+					InputMethodManager inputManager = (InputMethodManager) commentEditText.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
 					inputManager.hideSoftInputFromWindow(commentEditText.getWindowToken(), 0);
-				}else {
+				} else {
 					commentLayout.setVisibility(View.VISIBLE);
-					InputMethodManager inputManager = (InputMethodManager)commentEditText.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+					InputMethodManager inputManager = (InputMethodManager) commentEditText.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
 					inputManager.showSoftInput(commentEditText, 0);
 				}
 			}
 		});
+
+		sendText.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				String content = commentEditText.getText().toString();
+				mCommentPresenter.pushNewsComment(mAccessToken.getUid(), mAccessToken.getToken(), news.getId(), content);
+			}
+		});
+
+		actionRepost.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mWBShareHelper.shareWeibo(news);
+			}
+		});
+	}
+
+	@Override
+	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+		mWBShareHelper.handleWeiboResponse(intent, this);
+	}
+
+	@Override
+	public void onResponse(BaseResponse baseResponse) {
+		switch (baseResponse.errCode) {
+			case WBConstants.ErrorCode.ERR_OK:
+				Toast.makeText(this, "分享成功", Toast.LENGTH_LONG).show();
+				break;
+			case WBConstants.ErrorCode.ERR_CANCEL:
+				Toast.makeText(this, "取消分享", Toast.LENGTH_LONG).show();
+				break;
+			case WBConstants.ErrorCode.ERR_FAIL:
+				Toast.makeText(this,
+						"分享失败 " + "Error Message: " + baseResponse.errMsg,
+						Toast.LENGTH_LONG).show();
+				break;
+		}
 	}
 
 	@Override
@@ -266,4 +339,40 @@ public class DetailsActivity extends BaseActivity {
 		}
 	}
 
+	@Override
+	public void onLoadingData() {
+
+	}
+
+	@Override
+	public void onLoadDataSuccessfully(Model model) {
+
+	}
+
+	@Override
+	public void onLoadDataError() {
+
+	}
+
+	@Override
+	public void onSendingData() {
+
+	}
+
+	@Override
+	public void onSendDataSuccessfully() {
+		Intent intent = new Intent(DetailsActivity.this, CommentListActivity.class);
+		intent.putExtra("news", news);
+		startActivity(intent);
+	}
+
+	@Override
+	public void onSendDataError() {
+
+	}
+
+	@Override
+	public Context getContext() {
+		return this;
+	}
 }

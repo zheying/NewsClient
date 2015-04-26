@@ -46,8 +46,14 @@
         <activity android:name=".ChannelActivity" >
         </activity>
         <activity android:name=".DetailsActivity"
-                  android:hardwareAccelerated="true">
+                  android:hardwareAccelerated="true"
+                  android:configChanges="keyboardHidden|orientation">
+            <intent-filter>
+                <action android:name="com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>
+        <activity android:name=".CommentListActivity"/>
         <activity android:name=".CityListActivity" >
         </activity>
         <activity android:name=".SettingsActivity" >

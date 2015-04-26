@@ -46,6 +46,8 @@ public class NewsModel implements Serializable, Model{
     /** 感兴趣状态 */
     private boolean interestedStatus;
 
+    private int commentCount;
+
     @Override
     public String toString() {
         return "id:     " + getId() + "\n" +
@@ -189,6 +191,20 @@ public class NewsModel implements Serializable, Model{
         this.source_url = source_url;
     }
 
+    public int getCommentCount() {
+        return commentCount;
+    }
 
+    public void setCommentCount(int commentCount) {
+        this.commentCount = commentCount;
+    }
 
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof NewsModel))
+            return false;
+        if (o == this)
+            return true;
+        return ((NewsModel)o).getId() == getId();
+    }
 }

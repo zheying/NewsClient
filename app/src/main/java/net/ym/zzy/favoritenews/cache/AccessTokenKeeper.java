@@ -34,6 +34,7 @@ public class AccessTokenKeeper {
     private static final String KEY_EXPIRES_IN    = "expires_in";
 
     private static final String KEY_SCREEN_NAME   = "screen_name";
+    private static final String KEY_AVATAR        = "avatar";
     
     /**
      * 保存 Token 对象到 SharedPreferences。
@@ -98,6 +99,27 @@ public class AccessTokenKeeper {
         SharedPreferences pref = context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_APPEND);
 
         return pref.getString(KEY_SCREEN_NAME, "");
+    }
+
+    public static void writeAvatar(Context context, String avatar){
+        if (null == context){
+            return ;
+        }
+
+        SharedPreferences pref = context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_APPEND);
+        Editor editor = pref.edit();
+        editor.putString(KEY_AVATAR, avatar);
+        editor.commit();
+    }
+
+    public static String readAvatar(Context context){
+        if (null == context){
+            return null;
+        }
+
+        SharedPreferences pref = context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_APPEND);
+
+        return pref.getString(KEY_AVATAR, "");
     }
 
     /**

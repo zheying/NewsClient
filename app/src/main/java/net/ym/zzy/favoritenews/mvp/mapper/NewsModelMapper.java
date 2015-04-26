@@ -27,6 +27,7 @@ public class NewsModelMapper {
             newsModel.setSource_url(news.getSource_url());
             newsModel.setTitle(news.getTitle());
             newsModel.setReadStatus(news.getReadStatus());
+            newsModel.setCommentCount(news.getCommentCount());
             return newsModel;
         }
         return null;

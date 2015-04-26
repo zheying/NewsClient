@@ -13,7 +13,7 @@ public interface LoadDataView {
     void onLoadDataSuccessfully(Model model);
     void onLoadDataError();
 
-    void sendData();
+    void onSendingData();
     void onSendDataSuccessfully();
     void onSendDataError();
 

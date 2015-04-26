@@ -3,6 +3,9 @@ package net.ym.zzy.favoritenews;
 import java.util.ArrayList;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 
 
 import android.content.Intent;
@@ -30,8 +33,10 @@ import net.ym.zzy.favoritenews.adapter.NewsFragmentPagerAdapter;
 import net.ym.zzy.favoritenews.app.AppApplication;
 import net.ym.zzy.favoritenews.bean.ChannelItem;
 import net.ym.zzy.favoritenews.bean.ChannelManage;
+import net.ym.zzy.favoritenews.cache.AccessTokenKeeper;
 import net.ym.zzy.favoritenews.fragment.NewsFragment;
 import net.ym.zzy.favoritenews.tool.BaseTools;
+import net.ym.zzy.favoritenews.tool.Options;
 import net.ym.zzy.favoritenews.tool.UIUtils;
 import net.ym.zzy.favoritenews.view.ColumnHorizontalScrollView;
 import net.ym.zzy.favoritenews.view.DrawerView;
@@ -47,7 +52,7 @@ public class MainActivity extends FragmentActivity {
 	private ViewPager mViewPager;
 	private ImageView button_more_columns;
 	/** 用户选择的新闻分类列表*/
-	private ArrayList<ChannelItem> userChannelList=new ArrayList<ChannelItem>();
+	private ArrayList<ChannelItem> userChannelList=new ArrayList<>();
 	/** 当前选中的栏目*/
 	private int columnSelectIndex = 0;
 	/** 左阴影部分*/
@@ -79,6 +84,9 @@ public class MainActivity extends FragmentActivity {
 	/** 调整返回的RESULTCODE */
 
 	public final static int CHANNELRESULT = 10;
+
+	private ImageLoader mImageLoader = ImageLoader.getInstance();
+	private DisplayImageOptions mOptions = Options.getListOptions();
 
 
 	@Override
@@ -115,26 +123,32 @@ public class MainActivity extends FragmentActivity {
 //		top_refresh = (ImageView) findViewById(R.id.top_refresh);
 //		top_progress = (ProgressBar) findViewById(R.id.top_progress);
 		button_more_columns.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
-				Intent intent_channel = new  Intent(getApplicationContext(), ChannelActivity.class);
+				Intent intent_channel = new Intent(getApplicationContext(), ChannelActivity.class);
 				startActivityForResult(intent_channel, CHANNELREQUEST);
 				overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 			}
 		});
 		top_head.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				if(side_drawer.isMenuShowing()){
+				if (side_drawer.isMenuShowing()) {
 					side_drawer.showContent();
-				}else{
+				} else {
 					side_drawer.showMenu();
 				}
 			}
 		});
+
+		Oauth2AccessToken accessToken = AccessTokenKeeper.readAccessToken(this);
+		if (accessToken.isSessionValid()){
+			mImageLoader.displayImage(AccessTokenKeeper.readAvatar(this), top_head, mOptions);
+		}
+
 		setChangelView();
 	}
 	/** 

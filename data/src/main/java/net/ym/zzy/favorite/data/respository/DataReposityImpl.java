@@ -18,9 +18,9 @@ import java.util.HashMap;
  */
 public class DataReposityImpl implements DataRepository {
 
-//    private final String HOST = "http://192.168.202.202:8000/";
+    private final String HOST = "http://192.168.202.202:8000/";
 //    private final String HOST = "http://120.25.217.247:8000/";
-    private final String HOST = "http://120.25.217.247:81/";
+//    private final String HOST = "http://120.25.217.247:81/";
 
     private static DataRepository mInstance;
 
@@ -69,7 +69,7 @@ public class DataReposityImpl implements DataRepository {
     }
 
     @Override
-    public void login(final Context context, final String uid, final String name, final String token, final ResponseCallback callback) {
+    public void login(final Context context, final String uid, final String name, final String token, final String avatar, final ResponseCallback callback) {
         Runnable loader = new Runnable() {
             @Override
             public void run() {
@@ -78,6 +78,7 @@ public class DataReposityImpl implements DataRepository {
                     params.put("uid", uid);
                     params.put("name", name);
                     params.put("token", token);
+                    params.put("avatar", avatar);
                     final JsonBase  info = HttpDataLoder.getDataByPostMethodNotCache(context, HOST+"login/", params, null, JsonBase.class);
                     handler.post(new Runnable() {
                         @Override
@@ -152,7 +153,7 @@ public class DataReposityImpl implements DataRepository {
                         @Override
                         public void run() {
                             if (commentListJson.getCode() == 0) {
-                                callback.onResponse(commentListJson);
+                                callback.onResponse(commentListJson.getData());
                             }else {
                                 callback.onResponseError(commentListJson);
                             }
