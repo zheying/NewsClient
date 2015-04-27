@@ -18,6 +18,7 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 
+import net.ym.zzy.favoritenews.CollectsActivity;
 import net.ym.zzy.favoritenews.R;
 import net.ym.zzy.favoritenews.SettingsActivity;
 import net.ym.zzy.favoritenews.cache.AccessTokenKeeper;
@@ -37,6 +38,7 @@ public class DrawerView implements OnClickListener{
     private View login_layout; //登录之后显示的布局
     private View logout_layout; //登录之前显示的布局
     private View weibo_login;  //微博登录按钮
+    private View favor_btn;
 
     private ImageView avatar;  //用户头像
     private TextView user_name; //用户昵称
@@ -118,6 +120,9 @@ public class DrawerView implements OnClickListener{
         setting_btn =(RelativeLayout)localSlidingMenu.findViewById(R.id.setting_btn);
         setting_btn.setOnClickListener(this);
 
+        favor_btn = localSlidingMenu.findViewById(R.id.favorite_btn);
+        favor_btn.setOnClickListener(this);
+
         if (mAccessToken.isSessionValid()){
             logout_layout.setVisibility(View.GONE);
             login_layout.setVisibility(View.VISIBLE);
@@ -162,6 +167,10 @@ public class DrawerView implements OnClickListener{
 
                     }
                 });
+                break;
+            case R.id.favorite_btn:
+                activity.startActivity(new Intent(activity, CollectsActivity.class));
+                activity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 break;
             default:
                 break;

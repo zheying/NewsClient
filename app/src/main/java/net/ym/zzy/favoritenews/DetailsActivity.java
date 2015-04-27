@@ -43,8 +43,10 @@ import net.ym.zzy.favoritenews.cache.AccessTokenKeeper;
 import net.ym.zzy.favoritenews.dialog.TagDialog;
 import net.ym.zzy.favoritenews.mvp.model.Model;
 import net.ym.zzy.favoritenews.mvp.model.NewsModel;
+import net.ym.zzy.favoritenews.mvp.presenter.CollectedNewsPresenter;
 import net.ym.zzy.favoritenews.mvp.presenter.CommentPresenter;
 import net.ym.zzy.favoritenews.mvp.presenter.HobbyPresenter;
+import net.ym.zzy.favoritenews.mvp.view.CollectedNewsView;
 import net.ym.zzy.favoritenews.mvp.view.CommentView;
 import net.ym.zzy.favoritenews.mvp.view.HobbyView;
 import net.ym.zzy.favoritenews.service.NewsDetailsService;
@@ -69,6 +71,7 @@ public class DetailsActivity extends BaseActivity implements CommentView, IWeibo
 	private View commentLayout;
 	private View actionRepost;
     private View actionHobby;
+	private View actionFavor;
 	WebView webView;
     private View sendText;
 
@@ -79,6 +82,7 @@ public class DetailsActivity extends BaseActivity implements CommentView, IWeibo
 
 	private CommentPresenter mCommentPresenter;
 	private HobbyPresenter mHobbyPresenter;
+	private CollectedNewsPresenter mCollectedNewsPresenter;
 
 	private WBShareHelper mWBShareHelper;
 
@@ -96,6 +100,7 @@ public class DetailsActivity extends BaseActivity implements CommentView, IWeibo
 		initWebView();
 		mCommentPresenter = new CommentPresenter(this);
         mHobbyPresenter = new HobbyPresenter(mHobbyView);
+		mCollectedNewsPresenter = new CollectedNewsPresenter(mCollectedNewsView);
 
 		mWBShareHelper = new WBShareHelper(this);
 		if (savedInstanceState != null) {
@@ -156,6 +161,7 @@ public class DetailsActivity extends BaseActivity implements CommentView, IWeibo
         actionHobby = findViewById(R.id.action_hobby);
         loadingLayout = findViewById(R.id.loading_layout);
         errorLayout = findViewById(R.id.load_error);
+		actionFavor = findViewById(R.id.action_favor);
 
 		actionRepost = findViewById(R.id.action_repost);
 
@@ -249,6 +255,15 @@ public class DetailsActivity extends BaseActivity implements CommentView, IWeibo
                 initWebView();
             }
         });
+
+		actionFavor.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (!news.getCollectStatus()){
+					mCollectedNewsPresenter.pushCollectedNews(mAccessToken.getUid(), mAccessToken.getToken(), news.getId());
+				}
+			}
+		});
 	}
 
 	@Override
@@ -465,4 +480,51 @@ public class DetailsActivity extends BaseActivity implements CommentView, IWeibo
             return DetailsActivity.this;
         }
     };
+
+	CollectedNewsView mCollectedNewsView = new CollectedNewsView() {
+		@Override
+		public void onPullNewsListException(Exception ex) {
+
+		}
+
+		@Override
+		public void onPushNewsException(Exception ex) {
+
+		}
+
+		@Override
+		public void onLoadingData() {
+
+		}
+
+		@Override
+		public void onLoadDataSuccessfully(Model model) {
+
+		}
+
+		@Override
+		public void onLoadDataError() {
+
+		}
+
+		@Override
+		public void onSendingData() {
+
+		}
+
+		@Override
+		public void onSendDataSuccessfully() {
+
+		}
+
+		@Override
+		public void onSendDataError() {
+
+		}
+
+		@Override
+		public Context getContext() {
+			return DetailsActivity.this;
+		}
+	};
 }

@@ -54,6 +54,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".CommentListActivity"/>
+        <activity android:name=".CollectsActivity"/>
         <activity android:name=".CityListActivity" >
         </activity>
         <activity android:name=".SettingsActivity" >

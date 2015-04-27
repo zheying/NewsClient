@@ -61,6 +61,7 @@
     <string name="retry_large_image"><u>加载失败，点击重试</u></string>
     <string name="loding">加载中……</string>
     <string name="no_comments">快来抢沙发吧</string>
+    <string name="no_contents">暂无内容</string>
     <string name="click_screen_to_retry">加载失败，请点击屏幕重试</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
