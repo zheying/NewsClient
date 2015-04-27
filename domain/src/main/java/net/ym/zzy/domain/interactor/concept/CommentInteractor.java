@@ -8,7 +8,7 @@ import net.ym.zzy.domain.entity.json.JsonBase;
 /**
  * Created by zengzheying on 15/4/20.
  */
-public interface NewsCommentInteractor extends Interactor {
+public interface CommentInteractor extends Interactor {
 
     interface PushCommentCallback{
         void onCommentNewsSuccessfully();

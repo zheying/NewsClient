@@ -47,14 +47,31 @@
     <!-- android:layout_height="fill_parent" /> -->
     <!-- </com.ss.android.common.ui.view.SwipeOverlayFrameLayout> -->
 
-    <WebView
-        android:id="@+id/wb_details"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/tool_bar_layout"
-        android:layout_below="@id/title_bar_divider"
-        android:layerType="software"
-        android:visibility="gone"/>
+        android:layout_below="@id/title_bar_divider">
+        <WebView
+            android:id="@+id/wb_details"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layerType="software"
+            android:visibility="gone"/>
+
+        <include
+            android:id="@+id/loading_layout"
+            layout="@layout/loading_layout"
+            android:visibility="gone"/>
+
+        <include
+            android:id="@+id/load_error"
+            layout="@layout/error_layout"
+            android:visibility="gone"/>
+
+    </FrameLayout>
+
+
 
     <ProgressBar
         android:id="@+id/ss_htmlprogessbar"

@@ -40,10 +40,13 @@ import com.sina.weibo.sdk.constant.WBConstants;
 
 import net.ym.zzy.favoritenews.base.BaseActivity;
 import net.ym.zzy.favoritenews.cache.AccessTokenKeeper;
+import net.ym.zzy.favoritenews.dialog.TagDialog;
 import net.ym.zzy.favoritenews.mvp.model.Model;
 import net.ym.zzy.favoritenews.mvp.model.NewsModel;
 import net.ym.zzy.favoritenews.mvp.presenter.CommentPresenter;
+import net.ym.zzy.favoritenews.mvp.presenter.HobbyPresenter;
 import net.ym.zzy.favoritenews.mvp.view.CommentView;
+import net.ym.zzy.favoritenews.mvp.view.HobbyView;
 import net.ym.zzy.favoritenews.service.NewsDetailsService;
 import net.ym.zzy.favoritenews.tool.DateTools;
 import net.ym.zzy.favoritenews.weibo.auth.WBShareHelper;
@@ -65,10 +68,17 @@ public class DetailsActivity extends BaseActivity implements CommentView, IWeibo
 	private EditText commentEditText;
 	private View commentLayout;
 	private View actionRepost;
+    private View actionHobby;
 	WebView webView;
+    private View sendText;
+
+    private View loadingLayout;
+    private View errorLayout;
+
 	private Oauth2AccessToken mAccessToken;
+
 	private CommentPresenter mCommentPresenter;
-	private View sendText;
+	private HobbyPresenter mHobbyPresenter;
 
 	private WBShareHelper mWBShareHelper;
 
@@ -85,6 +95,7 @@ public class DetailsActivity extends BaseActivity implements CommentView, IWeibo
 		initView();
 		initWebView();
 		mCommentPresenter = new CommentPresenter(this);
+        mHobbyPresenter = new HobbyPresenter(mHobbyView);
 
 		mWBShareHelper = new WBShareHelper(this);
 		if (savedInstanceState != null) {
@@ -106,7 +117,6 @@ public class DetailsActivity extends BaseActivity implements CommentView, IWeibo
 	}
 
 	private void initWebView() {
-		webView = (WebView)findViewById(R.id.wb_details);
 		LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT);
 		if (!TextUtils.isEmpty(news_url)) {
 			WebSettings settings = webView.getSettings();
@@ -131,6 +141,9 @@ public class DetailsActivity extends BaseActivity implements CommentView, IWeibo
 			webView.setWebChromeClient(new MyWebChromeClient());
 			webView.setWebViewClient(new MyWebViewClient());
 			webView.loadUrl(news_url);
+            webView.setVisibility(View.GONE);
+            loadingLayout.setVisibility(View.VISIBLE);
+            errorLayout.setVisibility(View.GONE);
 		}
 	}
 
@@ -140,8 +153,13 @@ public class DetailsActivity extends BaseActivity implements CommentView, IWeibo
 		commentLayout = findViewById(R.id.comment_layout);
 		commentEditText = (EditText)findViewById(R.id.comment);
 		sendText = findViewById(R.id.sendText);
+        actionHobby = findViewById(R.id.action_hobby);
+        loadingLayout = findViewById(R.id.loading_layout);
+        errorLayout = findViewById(R.id.load_error);
 
 		actionRepost = findViewById(R.id.action_repost);
+
+        webView = (WebView)findViewById(R.id.wb_details);
 
 		title = (TextView) findViewById(R.id.title);
 		progressBar = (ProgressBar) findViewById(R.id.ss_htmlprogessbar);
@@ -202,6 +220,35 @@ public class DetailsActivity extends BaseActivity implements CommentView, IWeibo
 				mWBShareHelper.shareWeibo(news);
 			}
 		});
+
+        actionHobby.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (news.getTags() != null && news.getTags().size() > 0){
+                    final TagDialog dialog = new TagDialog(DetailsActivity.this);
+                    dialog.addTags(news.getTags());
+                    dialog.addButtonClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            mHobbyPresenter.addHobby(mAccessToken.getUid(), mAccessToken.getToken(), news.getId(), dialog.getTags());
+                            dialog.dismiss();
+                        }
+                    });
+                    dialog.show();
+                }else{
+                    mHobbyPresenter.addHobby(mAccessToken.getUid(), mAccessToken.getToken(), news.getId(), null);
+                }
+
+            }
+        });
+
+        errorLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                initWebView();
+            }
+        });
 	}
 
 	@Override
@@ -310,6 +357,8 @@ public class DetailsActivity extends BaseActivity implements CommentView, IWeibo
 			addImageClickListner();
 			progressBar.setVisibility(View.GONE);
 			webView.setVisibility(View.VISIBLE);
+            loadingLayout.setVisibility(View.GONE);
+            errorLayout.setVisibility(View.GONE);
 			title.setText(news_url);
 		}
 
@@ -324,6 +373,9 @@ public class DetailsActivity extends BaseActivity implements CommentView, IWeibo
 				String description, String failingUrl) {
 			progressBar.setVisibility(View.GONE);
 			super.onReceivedError(view, errorCode, description, failingUrl);
+            webView.setVisibility(View.GONE);
+            errorLayout.setVisibility(View.VISIBLE);
+            loadingLayout.setVisibility(View.GONE);
 		}
 	}
 	
@@ -375,4 +427,42 @@ public class DetailsActivity extends BaseActivity implements CommentView, IWeibo
 	public Context getContext() {
 		return this;
 	}
+
+
+    private HobbyView mHobbyView = new HobbyView() {
+        @Override
+        public void onLoadingData() {
+
+        }
+
+        @Override
+        public void onLoadDataSuccessfully(Model model) {
+
+        }
+
+        @Override
+        public void onLoadDataError() {
+
+        }
+
+        @Override
+        public void onSendingData() {
+
+        }
+
+        @Override
+        public void onSendDataSuccessfully() {
+            Toast.makeText(getContext(), "添加短期兴趣成功", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onSendDataError() {
+
+        }
+
+        @Override
+        public Context getContext() {
+            return DetailsActivity.this;
+        }
+    };
 }

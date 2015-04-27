@@ -94,7 +94,7 @@
             android:layout_weight="1.0" >
 
             <ImageView
-                android:id="@+id/action_report"
+                android:id="@+id/action_hobby"
                 style="@style/toolbar_action"
                 android:src="@drawable/ic_action_report" />
         </FrameLayout>

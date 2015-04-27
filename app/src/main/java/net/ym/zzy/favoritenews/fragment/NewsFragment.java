@@ -45,7 +45,7 @@ public class NewsFragment extends Fragment implements NewsListView{
 	NewsAdapter mAdapter;
 	String text;
 	int channel_id;
-	ImageView detail_loading;
+	View detail_loading;
 	public final static int SET_NEWSLIST = 0;
 	//Toast提示框
 	private RelativeLayout notify_view;
@@ -107,7 +107,7 @@ public class NewsFragment extends Fragment implements NewsListView{
 		View view = LayoutInflater.from(getActivity()).inflate(R.layout.news_fragment, null);
 		mListView = (HeadListView) view.findViewById(R.id.mListView);
 		TextView item_textview = (TextView)view.findViewById(R.id.item_textview);
-		detail_loading = (ImageView)view.findViewById(R.id.detail_loading);
+		detail_loading = view.findViewById(R.id.detail_loading);
 		//Toast提示框
 		notify_view = (RelativeLayout)view.findViewById(R.id.notify_view);
 		notify_view_text = (TextView)view.findViewById(R.id.notify_view_text);

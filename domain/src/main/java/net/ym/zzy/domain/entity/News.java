@@ -39,6 +39,13 @@ public class News implements Serializable{
     @SerializedName("picurl")
     private String picListString;
 
+    @SerializedName("tags")
+    private String tags;
+
+    /** 收藏状态 */
+    @SerializedName("collect_status")
+    private boolean collectStatus;
+
     /** 图片 列表 */
     private List<String> picList;
 
@@ -46,8 +53,7 @@ public class News implements Serializable{
     private boolean isLarge;
     /** 阅读状态 ，读过的话显示灰色背景 */
     private boolean readStatus;
-    /** 收藏状态 */
-    private boolean collectStatus;
+
     /** 喜欢 状态 */
     private boolean likeStatus;
     /** 感兴趣状态 */
@@ -252,4 +258,11 @@ public class News implements Serializable{
         this.commentCount = commentCount;
     }
 
+    public String getTags() {
+        return tags;
+    }
+
+    public void setTags(String tags) {
+        this.tags = tags;
+    }
 }

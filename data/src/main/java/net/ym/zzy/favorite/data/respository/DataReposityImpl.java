@@ -12,15 +12,17 @@ import net.ym.zzy.favorite.data.executor.JobExecutor;
 import net.ym.zzy.favorite.data.loader.HttpDataLoder;
 
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by zengzheying on 15/3/29.
  */
 public class DataReposityImpl implements DataRepository {
 
-    private final String HOST = "http://192.168.202.202:8000/";
+//    private final String HOST = "http://192.168.202.202:8000/";
 //    private final String HOST = "http://120.25.217.247:8000/";
 //    private final String HOST = "http://120.25.217.247:81/";
+    private static String HOST = "http://192.168.200.36:8000/";
 
     private static DataRepository mInstance;
 
@@ -206,5 +208,155 @@ public class DataReposityImpl implements DataRepository {
         };
 
         JobExecutor.getInstance().submit(loader, "deleteComment");
+    }
+
+    @Override
+    public void addShortTimeHobby(final Context context, final String uid, final String token, final int newsId, final List<String> tags, final ResponseCallback callback) {
+        Runnable loader = new Runnable() {
+            @Override
+            public void run() {
+                try{
+                    String tagString = "";
+                    if (tags != null && tags.size() > 0){
+                        for (int i = 0; i < tags.size(); i++){
+                            if (i == tags.size() - 1) {
+                                tagString += tags.get(i);
+                            }else{
+                                tagString += tags.get(i) + "|";
+                            }
+                        }
+                    }
+                    HashMap<String, String> params = new HashMap<>();
+                    params.put("uid", uid);
+                    params.put("token", token);
+                    params.put("news_id", Integer.toString(newsId));
+                    params.put("tags", tagString);
+                    final JsonBase info = HttpDataLoder.getDataByPostMethodNotCache(context, HOST + "hobby/", params, null, JsonBase.class);
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (info.getCode() == 0){
+                                callback.onResponse(info);
+                            }else{
+                                callback.onResponseError(info);
+                            }
+                        }
+                    });
+                }catch (final Exception ex){
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            callback.onException(ex);
+                        }
+                    });
+                }
+            }
+        };
+        JobExecutor.getInstance().submit(loader, "hobby" + newsId);
+    }
+
+    @Override
+    public void pushCollectedNews(final Context context, final String uid, final String token, final int newsId, final ResponseCallback callback) {
+        Runnable loader = new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    HashMap<String, String> params = new HashMap<>();
+                    params.put("uid", uid);
+                    params.put("token", token);
+                    params.put("news_id", Integer.toString(newsId));
+                    final JsonBase info = HttpDataLoder.getDataByPostMethodNotCache(context, HOST + "collect/", params, null, JsonBase.class);
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (info.getCode() == 0){
+                                callback.onResponse(info);
+                            }else{
+                                callback.onResponseError(info);
+                            }
+                        }
+                    });
+                }catch (final Exception ex){
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            callback.onException(ex);
+                        }
+                    });
+                }
+            }
+        };
+
+        JobExecutor.getInstance().submit(loader, "collect" + newsId);
+    }
+
+    @Override
+    public void pullCollectedNewsList(final Context context, final String uid, final String token, final int pageIndex, final boolean isRefresh, final ResponseCallback callback) {
+        final String key = "collectedNewsList_" + pageIndex + "_" + PAGE_SIZE;
+        Runnable loader = new Runnable() {
+            @Override
+            public void run() {
+                try{
+                    HashMap<String, String> params = new HashMap<>();
+                    params.put("uid", uid);
+                    params.put("token", token);
+                    final NewsJson newsJson = HttpDataLoder.getDataByPostMethod(context, HOST + "pull_collects/", key, pageIndex, params, null, isRefresh, NewsJson.class);
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (newsJson.getCode() == 0){
+                                callback.onResponse(newsJson);
+                            }else{
+                                callback.onResponseError(newsJson);
+                            }
+                        }
+                    });
+                }catch (final Exception ex){
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            callback.onException(ex);
+                        }
+                    });
+                }
+            }
+        };
+
+        JobExecutor.getInstance().submit(loader, "pullCollectedNewsList");
+    }
+
+    @Override
+    public void pushDislikedNews(final Context context, final String uid, final String token, final int newsId, final ResponseCallback callback) {
+        Runnable loader = new Runnable() {
+            @Override
+            public void run() {
+                try{
+                    HashMap<String, String> params = new HashMap<>();
+                    params.put("uid", uid);
+                    params.put("token", token);
+                    params.put("news_id", Integer.toString(newsId));
+                    final JsonBase info = HttpDataLoder.getDataByPostMethodNotCache(context, HOST + "dislike/", params, null, JsonBase.class);
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (info.getCode() == 0){
+                                callback.onResponse(info);
+                            }else{
+                                callback.onResponseError(info);
+                            }
+                        }
+                    });
+                }catch (final Exception ex){
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            callback.onException(ex);
+                        }
+                    });
+                }
+            }
+        };
+
+        JobExecutor.getInstance().submit(loader, "dislike" + newsId);
     }
 }

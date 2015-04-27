@@ -5,6 +5,7 @@ import android.content.Context;
 import net.ym.zzy.domain.entity.NewsList;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created by zengzheying on 15/3/28.
@@ -28,4 +29,13 @@ public interface DataRepository {
     public void pullComments(Context context, String uid, String token, int newsId, ResponseCallback callback);
 
     public void deleteComment(Context context, String uid, String token, int cid, ResponseCallback callback);
+
+    public void addShortTimeHobby(Context context, String uid, String token, int newsId, List<String> tags, ResponseCallback callback);
+
+    public void pushCollectedNews(Context context, String uid, String token, int newsId, ResponseCallback callback);
+
+    public void pullCollectedNewsList(Context context, String uid, String token, int pageIndex, boolean isRefresh, ResponseCallback callback);
+
+    public void pushDislikedNews(Context context, String uid, String token, int newsId, ResponseCallback callback);
+
 }

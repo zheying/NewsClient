@@ -4,7 +4,7 @@ import android.content.Context;
 
 import net.ym.zzy.domain.entity.CommentList;
 import net.ym.zzy.domain.entity.json.JsonBase;
-import net.ym.zzy.domain.interactor.concept.NewsCommentInteractor;
+import net.ym.zzy.domain.interactor.concept.CommentInteractor;
 import net.ym.zzy.domain.respository.DataRepository;
 
 import java.io.Serializable;
@@ -12,11 +12,11 @@ import java.io.Serializable;
 /**
  * Created by zengzheying on 15/4/20.
  */
-public class NewsCommentInteractorImpl implements NewsCommentInteractor {
+public class CommentInteractorImpl implements CommentInteractor {
 
     private final DataRepository mDataRepository;
 
-    public NewsCommentInteractorImpl(DataRepository dataRepository) {
+    public CommentInteractorImpl(DataRepository dataRepository) {
         mDataRepository = dataRepository;
     }
 

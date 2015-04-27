@@ -35,6 +35,8 @@ public class NewsModel implements Serializable, Model{
     /** 图片 列表 */
     private List<String> picList;
 
+    private ArrayList<String> tags;
+
     /** 图片类型是否为大图 */
     private boolean isLarge;
     /** 阅读状态 ，读过的话显示灰色背景 */
@@ -206,5 +208,21 @@ public class NewsModel implements Serializable, Model{
         if (o == this)
             return true;
         return ((NewsModel)o).getId() == getId();
+    }
+
+    public ArrayList<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(String tags) {
+        if (tags != null && !tags.trim().equals("") && !tags.trim().equals("null tag")) {
+            this.tags = new ArrayList<>();
+            String[] array = tags.replace("|", " ").split(" ");
+            for (int i = 0; i < array.length && i < 10; i++){
+                if (!array[i].trim().equals("")){
+                    this.tags.add(array[i]);
+                }
+            }
+        }
     }
 }
