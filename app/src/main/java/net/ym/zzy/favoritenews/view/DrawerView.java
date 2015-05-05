@@ -117,8 +117,8 @@ public class DrawerView implements OnClickListener{
 
         weibo_login.setOnClickListener(this);
 
-        setting_btn =(RelativeLayout)localSlidingMenu.findViewById(R.id.setting_btn);
-        setting_btn.setOnClickListener(this);
+//        setting_btn =(RelativeLayout)localSlidingMenu.findViewById(R.id.setting_btn);
+//        setting_btn.setOnClickListener(this);
 
         favor_btn = localSlidingMenu.findViewById(R.id.favorite_btn);
         favor_btn.setOnClickListener(this);
@@ -141,10 +141,10 @@ public class DrawerView implements OnClickListener{
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.setting_btn:
-                activity.startActivity(new Intent(activity,SettingsActivity.class));
-                activity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                break;
+//            case R.id.setting_btn:
+//                activity.startActivity(new Intent(activity,SettingsActivity.class));
+//                activity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+//                break;
 
             case R.id.weibo_btn:
                 WBAuthHelper.authorizeWBAuthHelper(new AuthorCallback() {

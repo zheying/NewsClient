@@ -1,6 +1,5 @@
 package net.ym.zzy.favoritenews.fragment;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,23 +15,25 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import net.ym.zzy.domain.entity.json.NewsJson;
-import net.ym.zzy.domain.respository.DataRepository;
-import net.ym.zzy.favorite.data.respository.DataReposityImpl;
+import com.sina.weibo.sdk.auth.Oauth2AccessToken;
+
 import net.ym.zzy.favoritenews.DetailsActivity;
 import net.ym.zzy.favoritenews.R;
 import net.ym.zzy.favoritenews.adapter.NewsAdapter;
+import net.ym.zzy.favoritenews.cache.AccessTokenKeeper;
 import net.ym.zzy.favoritenews.mvp.model.Model;
 import net.ym.zzy.favoritenews.mvp.model.NewsListModel;
 import net.ym.zzy.favoritenews.mvp.model.NewsModel;
+import net.ym.zzy.favoritenews.mvp.presenter.CollectedNewsPresenter;
 import net.ym.zzy.favoritenews.mvp.presenter.NewsListPresenter;
+import net.ym.zzy.favoritenews.mvp.view.CollectedNewsView;
 import net.ym.zzy.favoritenews.mvp.view.NewsListView;
 import net.ym.zzy.favoritenews.tool.Constants;
 import net.ym.zzy.favoritenews.view.HeadListView;
@@ -51,9 +52,19 @@ public class NewsFragment extends Fragment implements NewsListView{
 	private RelativeLayout notify_view;
 	private TextView notify_view_text;
 
+	private Oauth2AccessToken mAccessToken;
+
     private SwipeRefreshLayout swipeRefreshLayout;
 
 	private NewsListPresenter mNewsListPresenter;
+
+	private int mVisibleLastIndex = 0;
+	private int mVisibleItemCount = 0;
+	private int mPage = 0;
+
+	private static final int HAVE_MORE_DATA = 1;
+	private static final int HAVE_NO_MORE_DATA = 2;
+	private int mCurrentState = HAVE_MORE_DATA;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -61,7 +72,8 @@ public class NewsFragment extends Fragment implements NewsListView{
 		text = args != null ? args.getString("text") : "";
 		channel_id = args != null ? args.getInt("id", 0) : 0;
 		mNewsListPresenter = new NewsListPresenter(this);
-		loadNewsData(channel_id, 0, true);
+		mAccessToken = AccessTokenKeeper.readAccessToken(getContext());
+		loadNewsData(channel_id, mPage, true);
 		super.onCreate(savedInstanceState);
 	}
 
@@ -79,23 +91,6 @@ public class NewsFragment extends Fragment implements NewsListView{
 			if(newsList !=null && newsList.size() !=0) {
                 handler.obtainMessage(SET_NEWSLIST).sendToTarget();
             }
-//			}else{
-//				new Thread(new Runnable() {
-//					@Override
-//					public void run() {
-//						// TODO Auto-generated method stub
-//						try {
-//							Thread.sleep(2);
-//						} catch (InterruptedException e) {
-//							// TODO Auto-generated catch block
-//							e.printStackTrace();
-//						}
-//						handler.obtainMessage(SET_NEWSLIST).sendToTarget();
-//					}
-//				}).start();
-//			}
-		}else{
-			//fragment不可见时不执行操作
 		}
 		super.setUserVisibleHint(isVisibleToUser);
 	}
@@ -118,39 +113,21 @@ public class NewsFragment extends Fragment implements NewsListView{
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
 			@Override
 			public void onRefresh() {
-				loadNewsData(channel_id, 0, true);
+				mPage = 0;
+				loadNewsData(channel_id, mPage, true);
 			}
 		});
 		return view;
 	}
 
-//	private void initData() {
-////		newsList = Constants.getNewsList();
-//        DataRepository dataRepository = DataReposityImpl.getInstance();
-//        dataRepository.getNewsList(getActivity(), 1, 0, true, new DataRepository.ResponseCallback() {
-//			@Override
-//			public void onResponse(Serializable ser) {
-//				NewsJson newsJson = (NewsJson) ser;
-//				if (newsJson != null && newsJson.getCode() == 0) {
-//					newsList = newsJson.getData().getNewsList();
-//					handler.obtainMessage(SET_NEWSLIST).sendToTarget();
-//				}
-//
-//				if (swipeRefreshLayout != null) {
-//					swipeRefreshLayout.setRefreshing(false);
-//				}
-//			}
-//
-//			@Override
-//			public void onException(Exception ex) {
-//				Toast.makeText(getActivity(), "异常", Toast.LENGTH_SHORT).show();
-//				ex.printStackTrace(System.err);
-//			}
-//		});
-//	}
+	@Override
+	public void onResume() {
+		super.onResume();
+		mAccessToken = AccessTokenKeeper.readAccessToken(getContext());
+	}
 
 	private void loadNewsData(int catalog, int pageIndex, boolean isRefresh){
-		mNewsListPresenter.loadData(catalog, pageIndex, isRefresh);
+		mNewsListPresenter.loadData(mAccessToken.getUid(), mAccessToken.getToken(), catalog, pageIndex, isRefresh);
 	}
 	
 	Handler handler = new Handler() {
@@ -162,10 +139,11 @@ public class NewsFragment extends Fragment implements NewsListView{
 				detail_loading.setVisibility(View.GONE);
 				if(mAdapter == null){
                     mAdapter = new NewsAdapter(activity);
+					mAdapter.setPopupClickListener(mPopupClickListener);
 				}
                 int count = mAdapter.addData(newsList);
 				mListView.setAdapter(mAdapter);
-				mListView.setOnScrollListener(mAdapter);
+				mListView.setOnScrollListener(mOnScrollListener);
 				mListView.setPinnedHeaderView(LayoutInflater.from(activity).inflate(R.layout.list_item_section, mListView, false));
 				mListView.setOnItemClickListener(new OnItemClickListener() {
 
@@ -186,7 +164,7 @@ public class NewsFragment extends Fragment implements NewsListView{
 						}
 					}
 				});
-				if (count > 0) {
+				if (count > 0 && mPage == 0) {
 					initNotify(count);
 				}
 				break;
@@ -250,6 +228,11 @@ public class NewsFragment extends Fragment implements NewsListView{
 	public void onLoadDataSuccessfully(Model model) {
 		NewsListModel newsListModel = (NewsListModel)model;
 		newsList = newsListModel.getNewsModelList();
+		if (newsList != null && newsList.size() == net.ym.zzy.favoritenews.Constants.PAGE_SIZE){
+			mCurrentState = HAVE_MORE_DATA;
+		}else {
+			mCurrentState = HAVE_NO_MORE_DATA;
+		}
 		handler.obtainMessage(SET_NEWSLIST).sendToTarget();
 		if (swipeRefreshLayout != null) {
 			swipeRefreshLayout.setRefreshing(false);
@@ -283,4 +266,103 @@ public class NewsFragment extends Fragment implements NewsListView{
 	public Context getContext() {
 		return getActivity();
 	}
+
+	NewsAdapter.PopupClickListener mPopupClickListener = new NewsAdapter.PopupClickListener() {
+
+		@Override
+		public void onCollectClick(NewsModel newsModel) {
+			CollectedNewsPresenter mCollectedNewsPresenter = new CollectedNewsPresenter(new ListCollectNewsView(newsModel));
+			mCollectedNewsPresenter.pushCollectedNews(mAccessToken.getUid(), mAccessToken.getToken(), newsModel.getId());
+		}
+
+		@Override
+		public void onDislikeClick(int news_id) {
+			mNewsListPresenter.dislikeNew(mAccessToken.getUid(), mAccessToken.getToken(), news_id);
+		}
+
+		class ListCollectNewsView implements CollectedNewsView {
+
+			NewsModel mNewsModel;
+
+			public ListCollectNewsView(NewsModel newsModel) {
+				mNewsModel = newsModel;
+			}
+
+			@Override
+			public void onPullNewsListException(Exception ex) {
+
+			}
+
+			@Override
+			public void onPushNewsException(Exception ex) {
+
+			}
+
+			@Override
+			public void onLoadingData() {
+
+			}
+
+			@Override
+			public void onLoadDataSuccessfully(Model model) {
+
+			}
+
+			@Override
+			public void onLoadDataError() {
+
+			}
+
+			@Override
+			public void onSendingData() {
+
+			}
+
+			@Override
+			public void onSendDataSuccessfully() {
+				if (!mNewsModel.getCollectStatus()) {
+					Toast.makeText(getContext(), R.string.collect_success, Toast.LENGTH_SHORT).show();
+					mNewsModel.setCollectStatus(true);
+				} else {
+					Toast.makeText(getContext(), R.string.collect_cancel, Toast.LENGTH_SHORT).show();
+					mNewsModel.setCollectStatus(false);
+				}
+			}
+
+			@Override
+			public void onSendDataError() {
+
+			}
+
+			@Override
+			public Context getContext() {
+				return getActivity();
+			}
+		}
+
+	};
+
+	AbsListView.OnScrollListener mOnScrollListener = new AbsListView.OnScrollListener() {
+		@Override
+		public void onScrollStateChanged(AbsListView view, int scrollState) {
+			int itemsLastIndex = mAdapter.getCount()-1;  //数据集最后一项的索引
+			int lastIndex = itemsLastIndex;
+			Log.d("onScrollListener", "onScroll" + (mVisibleLastIndex == lastIndex));
+			if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE
+					&& mVisibleLastIndex == lastIndex) {
+				// 自动加载,在这里放置异步加载数据的代码
+				mPage += 1;
+				loadNewsData(channel_id, mPage, true);
+			}
+		}
+
+		@Override
+		public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+			Log.d("onScrollListener", "onScroll");
+			mVisibleItemCount = visibleItemCount;
+			mVisibleLastIndex = firstVisibleItem + visibleItemCount - 1;
+		}
+	};
+
+
 }

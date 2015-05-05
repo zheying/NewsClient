@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@color/dislike_bg_normal"
+    android:background="@color/material_500"
     android:gravity="center_vertical"
     android:minHeight="36.0dip"
     android:orientation="horizontal" >
@@ -54,7 +54,7 @@
             android:drawableLeft="@drawable/listpage_more_like"
             android:drawablePadding="4.0dip"
             android:duplicateParentState="true"
-            android:text="收藏" />
+            android:text="@string/pop_collect" />
     </LinearLayout>
 
     <ImageView

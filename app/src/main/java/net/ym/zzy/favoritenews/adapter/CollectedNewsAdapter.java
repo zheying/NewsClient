@@ -66,6 +66,11 @@ public class CollectedNewsAdapter extends BaseAdapter{
         return count;
     }
 
+    public void clearData(){
+        if (newsList != null){
+            newsList.clear();
+        }
+    }
 
     @Override
     public int getCount() {
@@ -116,6 +121,7 @@ public class CollectedNewsAdapter extends BaseAdapter{
             mHolder.right_padding_view = (View)view.findViewById(R.id.right_padding_view);
             //头部的日期部分
             mHolder.layout_list_section = (LinearLayout)view.findViewById(R.id.layout_list_section);
+            mHolder.layout_list_section.setVisibility(View.GONE);
             mHolder.section_text = (TextView)view.findViewById(R.id.section_text);
             mHolder.section_day = (TextView)view.findViewById(R.id.section_day);
             mHolder.needInflate = false;

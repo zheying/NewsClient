@@ -15,11 +15,18 @@
         style="@style/deail_title_text_style"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true" 
-        android:layout_marginLeft="50dp"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/back"
         android:layout_marginRight="50dp"
         android:singleLine="true"
         />
+
+    <ImageView
+        android:id="@+id/action_focus"
+        style="@style/toolbar_action"
+        android:src="@drawable/ic_focus"
+        android:layout_alignParentRight="true"
+        android:visibility="gone"/>
 
 <!--     <RelativeLayout -->
 <!--         android:id="@+id/address_layout" -->

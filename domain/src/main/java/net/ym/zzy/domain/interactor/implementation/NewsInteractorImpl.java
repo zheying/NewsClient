@@ -21,8 +21,8 @@ public class NewsInteractorImpl implements NewsInteractor {
     }
 
     @Override
-    public void executePullNewsList(Context context, int newsCatalog, int pageIndex, boolean isRefresh, final PullNewsListCallback callback) {
-        mDataRepository.getNewsList(context, newsCatalog, pageIndex, isRefresh, new DataRepository.ResponseCallback() {
+    public void executePullNewsList(Context context, String uid, String token, int newsCatalog, int pageIndex, boolean isRefresh, final PullNewsListCallback callback) {
+        mDataRepository.getNewsList(context, uid, token, newsCatalog, pageIndex, isRefresh, new DataRepository.ResponseCallback() {
             @Override
             public void onResponse(Serializable ser) {
                 if (callback != null){
@@ -92,6 +92,35 @@ public class NewsInteractorImpl implements NewsInteractor {
             public void onResponseError(Serializable errInfo) {
                 if (callback != null){
                     callback.onLoadedCollectedNewsListError((JsonBase)errInfo);
+                }
+            }
+
+            @Override
+            public void onException(Exception ex) {
+                if (callback != null){
+                    callback.onException(ex);
+                }
+            }
+        });
+    }
+
+    @Override
+    public void executePushDislikeNews(Context context, String uid, String token, int news_id, final PushDislikeNewsCallback callback) {
+        mDataRepository.pushDislikedNews(context, uid, token, news_id, new DataRepository.ResponseCallback() {
+            @Override
+            public void onResponse(Serializable ser) {
+                if (callback != null){
+                    JsonBase info = (JsonBase)ser;
+                    if (info != null && info.getCode() == 0){
+                        callback.onPullDislikeNewsSuccessfully();
+                    }
+                }
+            }
+
+            @Override
+            public void onResponseError(Serializable errInfo) {
+                if (callback != null){
+                    callback.onPullDislikeNewsError((JsonBase)errInfo);
                 }
             }
 

@@ -67,6 +67,14 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
+    <string name="activity_collect_title">收藏</string>
+
+    <string name="collect_success">收藏成功</string>
+    <string name="collect_cancel">已取消收藏</string>
+
+    <string name="pop_collect">收藏</string>
+    <string name="pop_collect_cancel">取消收藏</string>
+
 
     <string name="add_tag">Add Tag</string>
 </resources>

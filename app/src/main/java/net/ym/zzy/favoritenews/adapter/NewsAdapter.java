@@ -212,35 +212,9 @@ public class NewsAdapter extends BaseAdapter implements SectionIndexer, HeadList
             mHolder.large_image.setVisibility(View.GONE);
 			mHolder.item_image_layout.setVisibility(View.GONE);
 		}
-//		int markResID = getAltMarkResID(news.getMark(),news.getCollectStatus());
-//		if(markResID != -1){
-//			mHolder.alt_mark.setVisibility(View.VISIBLE);
-//			mHolder.alt_mark.setImageResource(markResID);
-//		}else{
-//			mHolder.alt_mark.setVisibility(View.GONE);
-//		}
-		//判断该新闻概述是否为空
-//		if (!TextUtils.isEmpty(news.getNewsAbstract())) {
-//			mHolder.item_abstract.setVisibility(View.VISIBLE);
-//			mHolder.item_abstract.setText(news.getNewsAbstract());
-//		} else {
-//			mHolder.item_abstract.setVisibility(View.GONE);
-//		}
-		//判断该新闻是否是特殊标记的，推广等，为空就是新闻
-//		if(!TextUtils.isEmpty(news.getLocal())){
-//			mHolder.list_item_local.setVisibility(View.VISIBLE);
-//			mHolder.list_item_local.setText(news.getLocal());
-//		}else{
-			mHolder.list_item_local.setVisibility(View.GONE);
-//		}
-		//判断评论字段是否为空，不为空显示对应布局
-//		if(!TextUtils.isEmpty(news.getComment())){
-//			//news.getLocal() != null &&
-//			mHolder.comment_layout.setVisibility(View.VISIBLE);
-//			mHolder.comment_content.setText(news.getComment());
-//		}else{
-//			mHolder.comment_layout.setVisibility(View.GONE);
-//		}
+
+		mHolder.list_item_local.setVisibility(View.GONE);
+
 		//判断该新闻是否已读
 		if(!news.getReadStatus()){
 			mHolder.item_layout.setSelected(true);
@@ -253,9 +227,7 @@ public class NewsAdapter extends BaseAdapter implements SectionIndexer, HeadList
 		int section = getSectionForPosition(position);
 		if (getPositionForSection(section) == position) {
 			mHolder.layout_list_section.setVisibility(View.VISIBLE);
-//			head_title.setText(news.getDate());
 			mHolder.section_text.setText(mSections.get(section));
-//			mHolder.section_day.setText("今天");
 		} else {
 			mHolder.layout_list_section.setVisibility(View.GONE);
 		}
@@ -327,6 +299,8 @@ public class NewsAdapter extends BaseAdapter implements SectionIndexer, HeadList
 	/** popWindow 关闭按钮 */
 	private ImageView btn_pop_close;
     private View btn_pop_dislike;
+	private View btn_pop_favor;
+	private TextView btn_pop_favor_tv;
 	
 	/**
 	 * 初始化弹出的pop
@@ -339,12 +313,21 @@ public class NewsAdapter extends BaseAdapter implements SectionIndexer, HeadList
 		popupWindow.setAnimationStyle(R.style.PopMenuAnimation);
 		btn_pop_close = (ImageView) popView.findViewById(R.id.btn_pop_close);
         btn_pop_dislike = popView.findViewById(R.id.ll_pop_dislike);
+		btn_pop_favor = popView.findViewById(R.id.ll_pop_favor);
+		btn_pop_favor_tv = (TextView)popView.findViewById(R.id.tv_pop_favor);
 	}
 	
 	/** 
 	 * 显示popWindow
 	 * */
 	public void showPop(final View parent, int x, int y, final int postion) {
+
+		if (getItem(postion).getCollectStatus()){
+			btn_pop_favor_tv.setText(R.string.pop_collect_cancel);
+		}else {
+			btn_pop_favor_tv.setText(R.string.pop_collect);
+		}
+
 		//设置popwindow显示位置
 		popupWindow.showAtLocation(parent, 0, x, y);
 		//获取popwindow焦点
@@ -364,10 +347,23 @@ public class NewsAdapter extends BaseAdapter implements SectionIndexer, HeadList
         btn_pop_dislike.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+				if (mPopupClickListener != null) {
+					mPopupClickListener.onDislikeClick(getItem(postion).getId());
+				}
                 popupWindow.dismiss();
                 deleteCell(parent, postion);
             }
         });
+
+		btn_pop_favor.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (mPopupClickListener != null){
+					mPopupClickListener.onCollectClick(getItem(postion));
+				}
+				popupWindow.dismiss();
+			}
+		});
 	}
 	
 	/** 
@@ -396,13 +392,7 @@ public class NewsAdapter extends BaseAdapter implements SectionIndexer, HeadList
 	
 	/* 是不是第一个ITEM，  true：是   false :不是*/
 	public boolean isfirst = true;
-	
-	/*
-	 * 设置是不是特殊的频道（城市频道）
-	 */
-	public void setCityChannel(boolean iscity){
-		isCityChannel = iscity;
-	}
+
 	
 	@Override
 	public void onScrollStateChanged(AbsListView view, int scrollState) {
@@ -536,4 +526,15 @@ public class NewsAdapter extends BaseAdapter implements SectionIndexer, HeadList
 
         collapse(v, animationListener);
     }
+
+	private PopupClickListener mPopupClickListener;
+
+	public void setPopupClickListener(PopupClickListener popupClickListener) {
+		mPopupClickListener = popupClickListener;
+	}
+
+	public interface PopupClickListener{
+		void onCollectClick(NewsModel newsModel);
+		void onDislikeClick(int news_id);
+	}
 }

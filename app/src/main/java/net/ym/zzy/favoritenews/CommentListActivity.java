@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 
@@ -25,6 +26,8 @@ public class CommentListActivity extends BaseActivity implements CommentListView
     private View loading;
     private View no_comments;
     private View load_error;
+    private TextView mTitleView;
+
     private Oauth2AccessToken mAccessToken;
     private NewsModel mNewsModel;
 
@@ -38,9 +41,9 @@ public class CommentListActivity extends BaseActivity implements CommentListView
         super.onCreate(savedInstanceState);
         setContentView(R.layout.comments);
 
-        initViews();
-
         mNewsModel = (NewsModel)getIntent().getSerializableExtra("news");
+
+        initViews();
 
         mAccessToken = AccessTokenKeeper.readAccessToken(this);
 
@@ -53,6 +56,8 @@ public class CommentListActivity extends BaseActivity implements CommentListView
         loading = findViewById(R.id.loading_layout);
         no_comments = findViewById(R.id.no_comments);
         load_error = findViewById(R.id.load_error);
+        mTitleView = (TextView)findViewById(R.id.title);
+        mTitleView.setText(mNewsModel.getTitle());
 
         comment_list.setVisibility(View.GONE);
         loading.setVisibility(View.VISIBLE);

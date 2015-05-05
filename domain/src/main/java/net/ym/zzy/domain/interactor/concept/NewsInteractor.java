@@ -28,9 +28,17 @@ public interface NewsInteractor extends Interactor {
         void onException(Exception ex);
     }
 
-    void executePullNewsList(Context context, int newsCatalog, int pageIndex, boolean isRefresh, PullNewsListCallback callback);
+    interface PushDislikeNewsCallback {
+        void onPullDislikeNewsSuccessfully();
+        void onPullDislikeNewsError(JsonBase errorInfo);
+        void onException(Exception ex);
+    }
+
+    void executePullNewsList(Context context, String uid, String token, int newsCatalog, int pageIndex, boolean isRefresh, PullNewsListCallback callback);
 
     void executePushCollectedNews(Context context, String uid, String token, int newsId, PushCollectedNewsCallback callback);
 
     void executePullCollectedNewsList(Context context, String uid, String token, int pageIndex, boolean isRefresh, PullCollectedNewsListCallback callback);
+
+    void executePushDislikeNews(Context context, String uid, String token, int news_id, PushDislikeNewsCallback callback);
 }

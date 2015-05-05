@@ -19,10 +19,10 @@ import java.util.List;
  */
 public class DataReposityImpl implements DataRepository {
 
-//    private final String HOST = "http://192.168.202.202:8000/";
+    private final String HOST = "http://192.168.202.202:8000/";
 //    private final String HOST = "http://120.25.217.247:8000/";
 //    private final String HOST = "http://120.25.217.247:81/";
-    private static String HOST = "http://192.168.200.36:8000/";
+//    private static String HOST = "http://192.168.200.36:8000/";
 
     private static DataRepository mInstance;
 
@@ -35,12 +35,16 @@ public class DataReposityImpl implements DataRepository {
 
     final Handler handler = new Handler(Looper.getMainLooper());
     @Override
-    public void getNewsList(final Context context,final int catalog,final int pageIndex,final boolean isRefresh,final ResponseCallback callback){
+    public void getNewsList(final Context context, String uid, String token, final int catalog,final int pageIndex,final boolean isRefresh,final ResponseCallback callback){
         final String key = "newslist_" + catalog + "_" + pageIndex + "_" + PAGE_SIZE;
         JobExecutor.getInstance().cancel(key);
         final HashMap<String, String> params = new HashMap<>();
         params.put("cat", String.valueOf(catalog));
         params.put("page", String.valueOf(pageIndex));
+        if (!("".equals(uid.trim())) && !("".equals(token.trim()))){
+            params.put("uid", uid);
+            params.put("token", token);
+        }
         Runnable loader = new Runnable() {
             @Override
             public void run() {
@@ -230,7 +234,7 @@ public class DataReposityImpl implements DataRepository {
                     params.put("uid", uid);
                     params.put("token", token);
                     params.put("news_id", Integer.toString(newsId));
-                    params.put("tags", tagString);
+                    params.put("tag", tagString);
                     final JsonBase info = HttpDataLoder.getDataByPostMethodNotCache(context, HOST + "hobby/", params, null, JsonBase.class);
                     handler.post(new Runnable() {
                         @Override
@@ -300,6 +304,7 @@ public class DataReposityImpl implements DataRepository {
                     HashMap<String, String> params = new HashMap<>();
                     params.put("uid", uid);
                     params.put("token", token);
+                    params.put("page", Integer.toString(pageIndex));
                     final NewsJson newsJson = HttpDataLoder.getDataByPostMethod(context, HOST + "pull_collects/", key, pageIndex, params, null, isRefresh, NewsJson.class);
                     handler.post(new Runnable() {
                         @Override

@@ -2,6 +2,7 @@ package net.ym.zzy.favorite.data.loader;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -52,7 +53,7 @@ public class HttpDataLoder {
         if (NetworkTools.isNetworkConnected(context) && (!CacheManager.isReadableDataCache(context, key) || isRefresh)){
             try{
                 String json = HttpLoader.getDataByGetMethod(context, url, params, header, timeout);
-                if (json != null && pageIndex == 0){
+                if (json != null && isRefresh){
                     data = fromJson(json, classOfT);
                     CacheManager.writeCacheObject(context, data, key);
                 }

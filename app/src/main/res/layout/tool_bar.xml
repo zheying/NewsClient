@@ -88,16 +88,16 @@
                 android:src="@drawable/ic_action_next" />
         </FrameLayout>
 
-        <FrameLayout
-            android:layout_width="0.0dip"
-            android:layout_height="fill_parent"
-            android:layout_weight="1.0" >
+        <!--<FrameLayout-->
+            <!--android:layout_width="0.0dip"-->
+            <!--android:layout_height="fill_parent"-->
+            <!--android:layout_weight="1.0" >-->
 
-            <ImageView
-                android:id="@+id/action_hobby"
-                style="@style/toolbar_action"
-                android:src="@drawable/ic_action_report" />
-        </FrameLayout>
+            <!--<ImageView-->
+                <!--android:id="@+id/action_hobby"-->
+                <!--style="@style/toolbar_action"-->
+                <!--android:src="@drawable/ic_action_focus" />-->
+        <!--</FrameLayout>-->
 
         <FrameLayout
             android:layout_width="0.0dip"

@@ -197,8 +197,8 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
 
         weibo_login.setOnClickListener(this);
 
-        setting_btn =(RelativeLayout)rootView.findViewById(R.id.setting_btn);
-        setting_btn.setOnClickListener(this);
+//        setting_btn =(RelativeLayout)rootView.findViewById(R.id.setting_btn);
+//        setting_btn.setOnClickListener(this);
     }
 
     @Override
@@ -257,10 +257,10 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.setting_btn:
-                getActivity().startActivity(new Intent(getActivity(),SettingsActivity.class));
-                getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                break;
+//            case R.id.setting_btn:
+//                getActivity().startActivity(new Intent(getActivity(),SettingsActivity.class));
+//                getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+//                break;
 
             case R.id.weibo_btn:
                 WBAuthHelper.authorizeWBAuthHelper(new AuthorCallback() {

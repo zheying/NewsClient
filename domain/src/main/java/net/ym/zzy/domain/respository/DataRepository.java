@@ -20,7 +20,7 @@ public interface DataRepository {
         void onException(Exception ex);
     }
 
-    public void getNewsList(Context context, int catalog, int pageIndex, boolean isRefresh, ResponseCallback callback);
+    public void getNewsList(Context context, String uid, String token, int catalog, int pageIndex, boolean isRefresh, ResponseCallback callback);
 
     public void login(Context context, String uid, String name, String token, String avatar, ResponseCallback callback);
 

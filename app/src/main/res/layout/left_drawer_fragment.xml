@@ -170,63 +170,63 @@
 
             <!--<ImageView style="@style/left_drawer_item_line" />-->
 
-            <RelativeLayout
-                android:id="@+id/offline_layout"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content" >
+            <!--<RelativeLayout-->
+                <!--android:id="@+id/offline_layout"-->
+                <!--android:layout_width="fill_parent"-->
+                <!--android:layout_height="wrap_content" >-->
 
-                <RelativeLayout
-                    android:id="@+id/offline_btn"
-                    style="@style/left_drawer_item_layout" >
+                <!--<RelativeLayout-->
+                    <!--android:id="@+id/offline_btn"-->
+                    <!--style="@style/left_drawer_item_layout" >-->
 
-                    <ImageView
-                        android:id="@+id/offline_icon"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginRight="25.0dip"
-                        android:src="@drawable/ic_drawer_offline" />
+                    <!--<ImageView-->
+                        <!--android:id="@+id/offline_icon"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_alignParentLeft="true"-->
+                        <!--android:layout_centerVertical="true"-->
+                        <!--android:layout_marginRight="25.0dip"-->
+                        <!--android:src="@drawable/ic_drawer_offline" />-->
 
-                    <RelativeLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_toRightOf="@id/offline_icon"
-                        android:minHeight="50.0dip" >
+                    <!--<RelativeLayout-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_toRightOf="@id/offline_icon"-->
+                        <!--android:minHeight="50.0dip" >-->
 
-                        <TextView
-                            android:id="@+id/offline_btn_text"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="14.0dip"
-                            android:text="@string/left_drawer_item_offline"
-                            android:textColor="@color/left_drawer_item_text"
-                            android:textSize="15.0sp" />
+                        <!--<TextView-->
+                            <!--android:id="@+id/offline_btn_text"-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_marginTop="14.0dip"-->
+                            <!--android:text="@string/left_drawer_item_offline"-->
+                            <!--android:textColor="@color/left_drawer_item_text"-->
+                            <!--android:textSize="15.0sp" />-->
 
-                        <TextView
-                            android:id="@+id/offline_hint"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@id/offline_btn_text"
-                            android:layout_marginTop="2.0dip"
-                            android:textColor="@color/left_drawer_offline_hint"
-                            android:textSize="7.0sp"
-                            android:visibility="gone" />
-                    </RelativeLayout>
-                </RelativeLayout>
+                        <!--<TextView-->
+                            <!--android:id="@+id/offline_hint"-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_below="@id/offline_btn_text"-->
+                            <!--android:layout_marginTop="2.0dip"-->
+                            <!--android:textColor="@color/left_drawer_offline_hint"-->
+                            <!--android:textSize="7.0sp"-->
+                            <!--android:visibility="gone" />-->
+                    <!--</RelativeLayout>-->
+                <!--</RelativeLayout>-->
 
-                <ImageView
-                    android:id="@+id/offline_progressbar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignBottom="@id/offline_btn"
-                    android:src="@drawable/left_drawer_download"
-                    android:visibility="gone" />
-            </RelativeLayout>
+                <!--<ImageView-->
+                    <!--android:id="@+id/offline_progressbar"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_alignBottom="@id/offline_btn"-->
+                    <!--android:src="@drawable/left_drawer_download"-->
+                    <!--android:visibility="gone" />-->
+            <!--</RelativeLayout>-->
 
-            <ImageView
-                android:id="@+id/offline_divider"
-                style="@style/left_drawer_item_line" />
+            <!--<ImageView-->
+                <!--android:id="@+id/offline_divider"-->
+                <!--style="@style/left_drawer_item_line" />-->
 
             <!--<LinearLayout-->
                 <!--android:id="@+id/app_activity_layout"-->
@@ -263,17 +263,17 @@
                 <!--<ImageView style="@style/left_drawer_item_line" />-->
             <!--</LinearLayout>-->
 
-            <RelativeLayout
-                android:id="@+id/setting_btn"
-                style="@style/left_drawer_item_layout" >
+            <!--<RelativeLayout-->
+                <!--android:id="@+id/setting_btn"-->
+                <!--style="@style/left_drawer_item_layout" >-->
 
-                <TextView
-                    style="@style/left_drawer_item_text"
-                    android:drawableLeft="@drawable/ic_drawer_setting"
-                    android:text="@string/left_drawer_item_setting" />
-            </RelativeLayout>
+                <!--<TextView-->
+                    <!--style="@style/left_drawer_item_text"-->
+                    <!--android:drawableLeft="@drawable/ic_drawer_setting"-->
+                    <!--android:text="@string/left_drawer_item_setting" />-->
+            <!--</RelativeLayout>-->
 
-            <ImageView style="@style/left_drawer_item_line" />
+            <!--<ImageView style="@style/left_drawer_item_line" />-->
 
             <!--<RelativeLayout-->
                 <!--android:id="@+id/feedback_btn"-->

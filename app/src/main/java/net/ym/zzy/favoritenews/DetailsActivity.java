@@ -26,6 +26,7 @@ import android.webkit.WebSettings.LayoutAlgorithm;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -71,7 +72,7 @@ public class DetailsActivity extends BaseActivity implements CommentView, IWeibo
 	private View commentLayout;
 	private View actionRepost;
     private View actionHobby;
-	private View actionFavor;
+	private ImageView actionFavor;
 	WebView webView;
     private View sendText;
 
@@ -158,10 +159,16 @@ public class DetailsActivity extends BaseActivity implements CommentView, IWeibo
 		commentLayout = findViewById(R.id.comment_layout);
 		commentEditText = (EditText)findViewById(R.id.comment);
 		sendText = findViewById(R.id.sendText);
-        actionHobby = findViewById(R.id.action_hobby);
+        actionHobby = findViewById(R.id.action_focus);
+		actionHobby.setVisibility(View.VISIBLE);
         loadingLayout = findViewById(R.id.loading_layout);
         errorLayout = findViewById(R.id.load_error);
-		actionFavor = findViewById(R.id.action_favor);
+		actionFavor = (ImageView)findViewById(R.id.action_favor);
+		if (news.getCollectStatus()){
+			actionFavor.setImageResource(R.drawable.ic_action_collect_already);
+		}else{
+			actionFavor.setImageResource(R.drawable.ic_action_collect_not_yet);
+		}
 
 		actionRepost = findViewById(R.id.action_repost);
 
@@ -259,9 +266,7 @@ public class DetailsActivity extends BaseActivity implements CommentView, IWeibo
 		actionFavor.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (!news.getCollectStatus()){
-					mCollectedNewsPresenter.pushCollectedNews(mAccessToken.getUid(), mAccessToken.getToken(), news.getId());
-				}
+				mCollectedNewsPresenter.pushCollectedNews(mAccessToken.getUid(), mAccessToken.getToken(), news.getId());
 			}
 		});
 	}
@@ -345,6 +350,17 @@ public class DetailsActivity extends BaseActivity implements CommentView, IWeibo
 		if (webView != null){
 			webView.reload();
 			webView.onPause();
+		}
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		if (webView != null){
+			webView.requestFocus();
+		}
+		if (commentEditText != null){
+			commentEditText.setText("");
 		}
 	}
 
@@ -467,7 +483,7 @@ public class DetailsActivity extends BaseActivity implements CommentView, IWeibo
 
         @Override
         public void onSendDataSuccessfully() {
-            Toast.makeText(getContext(), "添加短期兴趣成功", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "短期关注成功", Toast.LENGTH_SHORT).show();
         }
 
         @Override
@@ -514,7 +530,15 @@ public class DetailsActivity extends BaseActivity implements CommentView, IWeibo
 
 		@Override
 		public void onSendDataSuccessfully() {
-
+			if (!news.getCollectStatus()){
+				actionFavor.setImageResource(R.drawable.ic_action_collect_already);
+				news.setCollectStatus(true);
+				Toast.makeText(getContext(), R.string.collect_success, Toast.LENGTH_SHORT).show();
+			}else{
+				actionFavor.setImageResource(R.drawable.ic_action_collect_not_yet);
+				news.setCollectStatus(false);
+				Toast.makeText(getContext(), R.string.collect_cancel, Toast.LENGTH_SHORT).show();
+			}
 		}
 
 		@Override

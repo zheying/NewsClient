@@ -1,10 +1,13 @@
 package net.ym.zzy.favoritenews;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 
@@ -13,6 +16,7 @@ import net.ym.zzy.favoritenews.base.BaseActivity;
 import net.ym.zzy.favoritenews.cache.AccessTokenKeeper;
 import net.ym.zzy.favoritenews.mvp.model.Model;
 import net.ym.zzy.favoritenews.mvp.model.NewsListModel;
+import net.ym.zzy.favoritenews.mvp.model.NewsModel;
 import net.ym.zzy.favoritenews.mvp.presenter.CollectedNewsPresenter;
 import net.ym.zzy.favoritenews.mvp.view.CollectedNewsView;
 
@@ -26,12 +30,15 @@ public class CollectsActivity extends BaseActivity implements CollectedNewsView{
     private View load_error;
     private View no_content;
     private ListView mCollectListView;
+    private TextView mTitleView;
 
     private Oauth2AccessToken mAccessToken;
 
     private CollectedNewsPresenter mCollectedNewsPresenter;
 
     private CollectedNewsAdapter mCollectedNewsAdapter;
+
+    private boolean isRefresh;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,11 +59,14 @@ public class CollectsActivity extends BaseActivity implements CollectedNewsView{
         load_error = findViewById(R.id.load_error);
         no_content = findViewById(R.id.no_contents);
         mCollectListView = (ListView)findViewById(R.id.collect_list);
+        mTitleView = (TextView)findViewById(R.id.title);
 
         mRefreshLayout.setVisibility(View.GONE);
         loading_layout.setVisibility(View.VISIBLE);
         load_error.setVisibility(View.GONE);
         no_content.setVisibility(View.GONE);
+
+        mTitleView.setText(R.string.activity_collect_title);
 
         mRefreshLayout.setColorScheme(android.R.color.holo_blue_bright, android.R.color.holo_green_light,
                 android.R.color.holo_orange_light, android.R.color.holo_red_light);
@@ -76,6 +86,7 @@ public class CollectsActivity extends BaseActivity implements CollectedNewsView{
     }
 
     private void loadData(int pageIndex, boolean isRefresh){
+        this.isRefresh = isRefresh;
         mCollectedNewsPresenter.pullCollectedNewsList(mAccessToken.getUid(), mAccessToken.getToken(), pageIndex, isRefresh);
     }
 
@@ -105,6 +116,19 @@ public class CollectsActivity extends BaseActivity implements CollectedNewsView{
         if (newsListModel != null) {
             if (mCollectedNewsAdapter == null){
                 mCollectedNewsAdapter = new CollectedNewsAdapter(this);
+                mCollectListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        Intent intent = new Intent(getContext(), DetailsActivity.class);
+                        NewsModel newsModel = mCollectedNewsAdapter.getItem(position);
+                        intent.putExtra("news", newsModel);
+                        startActivity(intent);
+                        CollectsActivity.this.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                    }
+                });
+            }
+            if (isRefresh){
+                mCollectedNewsAdapter.clearData();
             }
             mCollectedNewsAdapter.addData(newsListModel.getNewsModelList());
         }

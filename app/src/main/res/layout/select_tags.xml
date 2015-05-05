@@ -8,7 +8,7 @@
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="请选择你喜欢的标签："
+        android:text="请选择你希望关注的标签："
         android:background="@drawable/select_tags_title"
         android:layout_alignParentTop="true"
         android:textColor="@color/white"
