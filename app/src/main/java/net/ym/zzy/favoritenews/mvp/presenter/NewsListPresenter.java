@@ -54,6 +54,7 @@ public class NewsListPresenter implements NewsInteractor.PullNewsListCallback, N
 
     @Override
     public void onException(Exception ex) {
-
+        ex.printStackTrace(System.err);
+        mNewsListView.onLoadDataError();
     }
 }

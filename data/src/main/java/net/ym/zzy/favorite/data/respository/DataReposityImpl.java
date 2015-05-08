@@ -19,9 +19,9 @@ import java.util.List;
  */
 public class DataReposityImpl implements DataRepository {
 
-    private final String HOST = "http://192.168.202.202:8000/";
+//    private final String HOST = "http://192.168.202.202:8000/";
 //    private final String HOST = "http://120.25.217.247:8000/";
-//    private final String HOST = "http://120.25.217.247:81/";
+    private final String HOST = "http://120.25.217.247:81/";
 //    private static String HOST = "http://192.168.200.36:8000/";
 
     private static DataRepository mInstance;
@@ -50,7 +50,7 @@ public class DataReposityImpl implements DataRepository {
             public void run() {
                 try {
                     final NewsJson newsJson = HttpDataLoder.getDataByGetMethod(context, HOST + "news/",
-                            key, pageIndex, params, null, isRefresh, NewsJson.class, 9000);
+                            key, pageIndex, params, null, isRefresh, NewsJson.class, 60000);
                     handler.post(new Runnable() {
                         @Override
                         public void run() {

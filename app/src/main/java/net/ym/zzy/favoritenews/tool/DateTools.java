@@ -149,11 +149,11 @@ public class DateTools {
 		Log.d("test", current + " " + publishTime + " " + delta);
 		if (delta < 60 * 60){
 			return (delta < 60 ? 1 : delta / 60) + "分钟前";
-		}else if (delta < 60 * 60 * 24){
+		}else if (delta < 60 * 60 * 3){
 			return delta / (60 * 60) + "小时前";
 		}else{
 			SimpleDateFormat sdf = new SimpleDateFormat("MM-dd HH:mm");
-			return sdf.format(new Date(publishTime + 1000L));
+			return sdf.format(new Date(publishTime * 1000L));
 		}
 	}
 
@@ -163,7 +163,7 @@ public class DateTools {
 		Log.d("test", current + " " + publishTime + " " + delta);
 		if (delta < 60 * 60){
 			return (delta < 60 ? 1 : delta / 60) + "分钟前";
-		}else if (delta < 60 * 60 * 24){
+		}else if (delta < 60 * 60 * 3){
 			return delta / (60 * 60) + "小时前";
 		}else{
 			SimpleDateFormat sdf = new SimpleDateFormat("MM-dd HH:mm");

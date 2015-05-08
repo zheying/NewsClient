@@ -4,7 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -40,6 +43,17 @@ public class CollectsActivity extends BaseActivity implements CollectedNewsView{
 
     private boolean isRefresh;
 
+    private int mVisibleLastIndex = 0;
+    private int mVisibleItemCount = 0;
+    private int mSelectedScrollY = 0;
+    private int mPage = 0;
+
+    private View footerView;
+
+    private static final int HAVE_MORE_DATA = 1;
+    private static final int HAVE_NO_MORE_DATA = 2;
+    private int mCurrentState = HAVE_MORE_DATA;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,7 +64,7 @@ public class CollectsActivity extends BaseActivity implements CollectedNewsView{
         mCollectedNewsPresenter = new CollectedNewsPresenter(this);
         mAccessToken = AccessTokenKeeper.readAccessToken(this);
 
-        loadData(0, true);
+        loadData(mPage, true);
     }
 
     private void initView(){
@@ -60,6 +74,7 @@ public class CollectsActivity extends BaseActivity implements CollectedNewsView{
         no_content = findViewById(R.id.no_contents);
         mCollectListView = (ListView)findViewById(R.id.collect_list);
         mTitleView = (TextView)findViewById(R.id.title);
+        footerView = LayoutInflater.from(getContext()).inflate(R.layout.list_loading_footer, null, false);
 
         mRefreshLayout.setVisibility(View.GONE);
         loading_layout.setVisibility(View.VISIBLE);
@@ -73,20 +88,27 @@ public class CollectsActivity extends BaseActivity implements CollectedNewsView{
         mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                loadData(0, true);
+                mPage = 0;
+                loadData(mPage, true);
             }
         });
 
         load_error.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadData(0, true);
+                mPage = 0;
+                loadData(mPage, true);
             }
         });
     }
 
     private void loadData(int pageIndex, boolean isRefresh){
         this.isRefresh = isRefresh;
+        if (pageIndex == 0 && mCollectListView != null){
+            if (mCollectListView.getFooterViewsCount() > 0){
+                mCollectListView.removeFooterView(footerView);
+            }
+        }
         mCollectedNewsPresenter.pullCollectedNewsList(mAccessToken.getUid(), mAccessToken.getToken(), pageIndex, isRefresh);
     }
 
@@ -114,6 +136,11 @@ public class CollectsActivity extends BaseActivity implements CollectedNewsView{
         NewsListModel newsListModel = (NewsListModel)model;
         mRefreshLayout.setRefreshing(false);
         if (newsListModel != null) {
+            if (newsListModel.getNewsModelList().size() == Constants.PAGE_SIZE){
+                mCurrentState = HAVE_MORE_DATA;
+            }else{
+                mCurrentState = HAVE_NO_MORE_DATA;
+            }
             if (mCollectedNewsAdapter == null){
                 mCollectedNewsAdapter = new CollectedNewsAdapter(this);
                 mCollectListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -132,6 +159,33 @@ public class CollectsActivity extends BaseActivity implements CollectedNewsView{
             }
             mCollectedNewsAdapter.addData(newsListModel.getNewsModelList());
         }
+
+        if (mPage == 0){
+            if (mCollectedNewsAdapter.getCount() >= Constants.PAGE_SIZE) {
+                mCollectListView.addFooterView(footerView);
+            }
+            mCollectListView.setOnScrollListener(mOnScrollListener);
+        }
+
+        if (mCurrentState == HAVE_NO_MORE_DATA){
+            ((TextView)footerView.findViewById(R.id.tv_loading)).setText("没有更多了");
+            footerView.findViewById(R.id.loading_progress).setVisibility(View.GONE);
+            footerView.setOnClickListener(null);
+        }else if (mCurrentState == HAVE_MORE_DATA){
+            ((TextView)footerView.findViewById(R.id.tv_loading)).setText("点击加载更多");
+            footerView.findViewById(R.id.loading_progress).setVisibility(View.GONE);
+            footerView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mPage += 1;
+                    loadData(mPage, true);
+                    ((TextView)footerView.findViewById(R.id.tv_loading)).setText("正在加载...");
+                    footerView.findViewById(R.id.loading_progress).setVisibility(View.VISIBLE);
+                    footerView.setOnClickListener(null);
+                }
+            });
+        }
+
         if (mCollectedNewsAdapter.getCount() > 0) {
             mRefreshLayout.setVisibility(View.VISIBLE);
             loading_layout.setVisibility(View.GONE);
@@ -174,4 +228,27 @@ public class CollectsActivity extends BaseActivity implements CollectedNewsView{
     public Context getContext() {
         return this;
     }
+
+    AbsListView.OnScrollListener mOnScrollListener = new AbsListView.OnScrollListener() {
+        @Override
+        public void onScrollStateChanged(AbsListView view, int scrollState) {
+//			int itemsLastIndex = mAdapter.getCount()-1;  //数据集最后一项的索引
+//			int lastIndex = itemsLastIndex;
+//			Log.d("onScrollListener", "onScroll" + (mVisibleLastIndex == lastIndex));
+//			if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE
+//					&& mVisibleLastIndex == lastIndex) {
+//				// 自动加载,在这里放置异步加载数据的代码
+//				mPage += 1;
+//				loadNewsData(channel_id, mPage, true);
+//			}
+        }
+
+        @Override
+        public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+            Log.d("onScrollListener", "onScroll" + firstVisibleItem);
+            mSelectedScrollY = view.getScrollY();
+            mVisibleItemCount = visibleItemCount;
+            mVisibleLastIndex = firstVisibleItem + visibleItemCount - 1;
+        }
+    };
 }

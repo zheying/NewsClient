@@ -1,6 +1,7 @@
 package net.ym.zzy.favoritenews.weibo.auth;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,6 +26,7 @@ import net.ym.zzy.favorite.data.respository.DataReposityImpl;
 import net.ym.zzy.favoritenews.Constants;
 import net.ym.zzy.favoritenews.R;
 import net.ym.zzy.favoritenews.cache.AccessTokenKeeper;
+import net.ym.zzy.favoritenews.dialog.LoadingDialog;
 
 import java.io.Serializable;
 
@@ -168,10 +170,14 @@ public class WBAuthHelper {
 //                    Log.d("avatar", "image_url:" + user.profile_image_url);
 //                    Log.d("avatar", "avatar hd:" + user.avatar_hd);
 //                    Log.d("avatar", "avatar large:" + user.avatar_large);
-
+                    final Dialog dialog = new LoadingDialog(context);
+                    dialog.show();
                     dataRepository.login(context, mAccessToken.getUid(), user.screen_name, mAccessToken.getToken(), user.avatar_large, new DataRepository.ResponseCallback() {
                         @Override
                         public void onResponse(Serializable ser) {
+                            if (dialog != null && dialog.isShowing()){
+                                dialog.dismiss();
+                            }
                             Toast.makeText(context, "登陆成功", Toast.LENGTH_SHORT).show();
                             if (mAuthorCallback != null) {
                                 mAuthorCallback.onComplete();
@@ -180,11 +186,17 @@ public class WBAuthHelper {
 
                         @Override
                         public void onResponseError(Serializable errInfo) {
+                            if (dialog != null && dialog.isShowing()){
+                                dialog.dismiss();
+                            }
                             Toast.makeText(context, "登陆失败" + ((JsonBase) errInfo).getMsg(), Toast.LENGTH_SHORT).show();
                         }
 
                         @Override
                         public void onException(Exception ex) {
+                            if (dialog != null && dialog.isShowing()){
+                                dialog.dismiss();
+                            }
                             ex.printStackTrace(System.err);
                         }
                     });

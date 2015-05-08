@@ -43,7 +43,7 @@ public class NewsInteractorImpl implements NewsInteractor {
             @Override
             public void onException(Exception ex) {
                 if (callback != null){
-                    callback.onLoadDataError();
+                    callback.onException(ex);
                 }
             }
         });

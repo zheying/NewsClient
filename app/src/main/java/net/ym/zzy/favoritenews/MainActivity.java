@@ -144,14 +144,21 @@ public class MainActivity extends FragmentActivity {
 			}
 		});
 
+
+
+		setChangelView();
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
 		Oauth2AccessToken accessToken = AccessTokenKeeper.readAccessToken(this);
 		if (accessToken.isSessionValid()){
 			mImageLoader.displayImage(AccessTokenKeeper.readAvatar(this), top_head, mOptions);
 		}
-
-		setChangelView();
 	}
-	/** 
+
+	/**
 	 *  当栏目项发生变化时候调用
 	 * */
 	private void setChangelView() {

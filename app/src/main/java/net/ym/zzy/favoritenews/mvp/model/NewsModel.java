@@ -37,6 +37,8 @@ public class NewsModel implements Serializable, Model{
 
     private ArrayList<String> tags;
 
+    private boolean recommend;
+
     /** 图片类型是否为大图 */
     private boolean isLarge;
     /** 阅读状态 ，读过的话显示灰色背景 */
@@ -224,5 +226,13 @@ public class NewsModel implements Serializable, Model{
                 }
             }
         }
+    }
+
+    public boolean isRecommend() {
+        return recommend;
+    }
+
+    public void setRecommend(boolean recommend) {
+        this.recommend = recommend;
     }
 }

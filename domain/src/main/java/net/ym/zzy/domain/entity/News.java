@@ -33,7 +33,7 @@ public class News implements Serializable{
 
     /** 发布时间 */
     @SerializedName("date")
-    private long publishTime;
+    private String publishTime;
 
     /** 图片列表字符串 */
     @SerializedName("picurl")
@@ -45,6 +45,9 @@ public class News implements Serializable{
     /** 收藏状态 */
     @SerializedName("collect_status")
     private boolean collectStatus;
+
+    @SerializedName("recommend")
+    private boolean recommend;
 
     /** 图片 列表 */
     private List<String> picList;
@@ -108,11 +111,11 @@ public class News implements Serializable{
         this.source = source;
     }
 
-    public Long getPublishTime() {
+    public String getPublishTime() {
         return publishTime;
     }
 
-    public void setPublishTime(Long publishTime) {
+    public void setPublishTime(String publishTime) {
         this.publishTime = publishTime;
     }
 
@@ -264,5 +267,13 @@ public class News implements Serializable{
 
     public void setTags(String tags) {
         this.tags = tags;
+    }
+
+    public boolean isRecommend() {
+        return recommend;
+    }
+
+    public void setRecommend(boolean recommend) {
+        this.recommend = recommend;
     }
 }

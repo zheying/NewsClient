@@ -115,7 +115,7 @@ public class DetailsActivity extends BaseActivity implements CommentView, IWeibo
 		if (mAccessToken == null || "".equals(mAccessToken.getUid())) {
 			news_url = Constants.HOST + "view_news/" + news.getId() + "/";
 		}else{
-			news_url = Constants.HOST + "view_news/" + news.getId() + "/?uid=" + mAccessToken.getUid();
+			news_url = Constants.HOST + "view_news/" + news.getId() + "/?uid=" + mAccessToken.getUid() + "&recommend_type=" + (news.isRecommend()? 1 : 0);
 		}
 		news_title = news.getTitle();
 		news_source = news.getSource();

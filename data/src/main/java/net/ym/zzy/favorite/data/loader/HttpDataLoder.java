@@ -203,7 +203,7 @@ public class HttpDataLoder {
         if (NetworkTools.isNetworkConnected(context) && (!CacheManager.isReadableDataCache(context, key) || isRefresh)){
             try{
                 String json = HttpLoader.getDataByPostMethod(context, url, params, header);
-                if (json != null && pageIndex == 0){
+                if (json != null && isRefresh){
                     data = fromJson(json, classOfT);
                     CacheManager.writeCacheObject(context, data, key);
                 }

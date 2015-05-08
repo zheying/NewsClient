@@ -14,6 +14,7 @@ public interface NewsInteractor extends Interactor {
     interface PullNewsListCallback {
         void onLoadDataSuccessfully(List<News> newsList);
         void onLoadDataError();
+        void onException(Exception ex);
     }
 
     interface PushCollectedNewsCallback{

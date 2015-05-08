@@ -25,6 +25,13 @@
         android:layout_height="match_parent"
         layout="@layout/loading_layout"/>
 
+    <include
+        android:id="@+id/detail_load_error"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        layout="@layout/error_layout"
+        android:visibility="gone"/>
+
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"

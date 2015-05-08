@@ -47,6 +47,7 @@ public class NewsFragment extends Fragment implements NewsListView{
 	String text;
 	int channel_id;
 	View detail_loading;
+	View detail_load_error;
 	public final static int SET_NEWSLIST = 0;
 	//Toast提示框
 	private RelativeLayout notify_view;
@@ -60,7 +61,10 @@ public class NewsFragment extends Fragment implements NewsListView{
 
 	private int mVisibleLastIndex = 0;
 	private int mVisibleItemCount = 0;
+	private int mSelectedScrollY = 0;
 	private int mPage = 0;
+
+	private View footerView;
 
 	private static final int HAVE_MORE_DATA = 1;
 	private static final int HAVE_NO_MORE_DATA = 2;
@@ -103,6 +107,15 @@ public class NewsFragment extends Fragment implements NewsListView{
 		mListView = (HeadListView) view.findViewById(R.id.mListView);
 		TextView item_textview = (TextView)view.findViewById(R.id.item_textview);
 		detail_loading = view.findViewById(R.id.detail_loading);
+		detail_load_error = view.findViewById(R.id.detail_load_error);
+
+		detail_load_error.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				loadNewsData(channel_id, 0, true);
+			}
+		});
+
 		//Toast提示框
 		notify_view = (RelativeLayout)view.findViewById(R.id.notify_view);
 		notify_view_text = (TextView)view.findViewById(R.id.notify_view_text);
@@ -117,6 +130,7 @@ public class NewsFragment extends Fragment implements NewsListView{
 				loadNewsData(channel_id, mPage, true);
 			}
 		});
+		footerView = LayoutInflater.from(getContext()).inflate(R.layout.list_loading_footer, null, false);
 		return view;
 	}
 
@@ -127,6 +141,11 @@ public class NewsFragment extends Fragment implements NewsListView{
 	}
 
 	private void loadNewsData(int catalog, int pageIndex, boolean isRefresh){
+		if (pageIndex == 0 && mListView != null){
+			if (mListView.getFooterViewsCount() > 0){
+				mListView.removeFooterView(footerView);
+			}
+		}
 		mNewsListPresenter.loadData(mAccessToken.getUid(), mAccessToken.getToken(), catalog, pageIndex, isRefresh);
 	}
 	
@@ -136,15 +155,39 @@ public class NewsFragment extends Fragment implements NewsListView{
 			// TODO Auto-generated method stub
 			switch (msg.what) {
 			case SET_NEWSLIST:
-				detail_loading.setVisibility(View.GONE);
 				if(mAdapter == null){
                     mAdapter = new NewsAdapter(activity);
 					mAdapter.setPopupClickListener(mPopupClickListener);
 				}
+				if (mPage == 0){
+					mAdapter.clearData();
+				}
                 int count = mAdapter.addData(newsList);
-				mListView.setAdapter(mAdapter);
-				mListView.setOnScrollListener(mOnScrollListener);
+				if (mPage == 0) {
+					mListView.setAdapter(mAdapter);
+					mListView.addFooterView(footerView);
+					mListView.setOnScrollListener(mOnScrollListener);
+				}
+				if (mCurrentState == HAVE_NO_MORE_DATA){
+					((TextView)footerView.findViewById(R.id.tv_loading)).setText("暂时没有更多新闻");
+					footerView.findViewById(R.id.loading_progress).setVisibility(View.GONE);
+					footerView.setOnClickListener(null);
+				}else if (mCurrentState == HAVE_MORE_DATA){
+					((TextView)footerView.findViewById(R.id.tv_loading)).setText("点击加载更多");
+					footerView.findViewById(R.id.loading_progress).setVisibility(View.GONE);
+					footerView.setOnClickListener(new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							mPage += 1;
+							loadNewsData(channel_id, mPage, true);
+							((TextView)footerView.findViewById(R.id.tv_loading)).setText("正在加载...");
+							footerView.findViewById(R.id.loading_progress).setVisibility(View.VISIBLE);
+							footerView.setOnClickListener(null);
+						}
+					});
+				}
 				mListView.setPinnedHeaderView(LayoutInflater.from(activity).inflate(R.layout.list_item_section, mListView, false));
+				mListView.scrollTo(0, mSelectedScrollY);
 				mListView.setOnItemClickListener(new OnItemClickListener() {
 
 					@Override
@@ -164,9 +207,9 @@ public class NewsFragment extends Fragment implements NewsListView{
 						}
 					}
 				});
-				if (count > 0 && mPage == 0) {
-					initNotify(count);
-				}
+//				if (count > 0 && mPage == 0) {
+//					initNotify(count);
+//				}
 				break;
 			default:
 				break;
@@ -221,7 +264,13 @@ public class NewsFragment extends Fragment implements NewsListView{
 
 	@Override
 	public void onLoadingData() {
-
+		if (mAdapter == null || mAdapter.getCount() == 0){
+			if (detail_loading != null && detail_load_error != null  && swipeRefreshLayout != null) {
+				detail_loading.setVisibility(View.VISIBLE);
+				detail_load_error.setVisibility(View.GONE);
+				swipeRefreshLayout.setVisibility(View.GONE);
+			}
+		}
 	}
 
 	@Override
@@ -237,6 +286,9 @@ public class NewsFragment extends Fragment implements NewsListView{
 		if (swipeRefreshLayout != null) {
 			swipeRefreshLayout.setRefreshing(false);
 		}
+		detail_loading.setVisibility(View.GONE);
+		detail_load_error.setVisibility(View.GONE);
+		swipeRefreshLayout.setVisibility(View.VISIBLE);
 	}
 
 	@Override
@@ -244,7 +296,31 @@ public class NewsFragment extends Fragment implements NewsListView{
 		if (swipeRefreshLayout != null) {
 			swipeRefreshLayout.setRefreshing(false);
 		}
-		Toast.makeText(getActivity(), "加载数据失败", Toast.LENGTH_SHORT).show();
+		if (mAdapter == null || mAdapter.getCount() == 0){
+			detail_loading.setVisibility(View.GONE);
+			detail_load_error.setVisibility(View.VISIBLE);
+			swipeRefreshLayout.setVisibility(View.GONE);
+		}else {
+			Toast.makeText(getActivity(), "加载数据失败", Toast.LENGTH_SHORT).show();
+		}
+		if (mCurrentState == HAVE_NO_MORE_DATA){
+			((TextView)footerView.findViewById(R.id.tv_loading)).setText("暂时没有更多新闻");
+			footerView.findViewById(R.id.loading_progress).setVisibility(View.GONE);
+			footerView.setOnClickListener(null);
+		}else if (mCurrentState == HAVE_MORE_DATA){
+			((TextView)footerView.findViewById(R.id.tv_loading)).setText("点击加载更多");
+			footerView.findViewById(R.id.loading_progress).setVisibility(View.GONE);
+			footerView.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					mPage += 1;
+					loadNewsData(channel_id, mPage, true);
+					((TextView)footerView.findViewById(R.id.tv_loading)).setText("正在加载...");
+					footerView.findViewById(R.id.loading_progress).setVisibility(View.VISIBLE);
+					footerView.setOnClickListener(null);
+				}
+			});
+		}
 	}
 
 	@Override
@@ -345,20 +421,21 @@ public class NewsFragment extends Fragment implements NewsListView{
 	AbsListView.OnScrollListener mOnScrollListener = new AbsListView.OnScrollListener() {
 		@Override
 		public void onScrollStateChanged(AbsListView view, int scrollState) {
-			int itemsLastIndex = mAdapter.getCount()-1;  //数据集最后一项的索引
-			int lastIndex = itemsLastIndex;
-			Log.d("onScrollListener", "onScroll" + (mVisibleLastIndex == lastIndex));
-			if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE
-					&& mVisibleLastIndex == lastIndex) {
-				// 自动加载,在这里放置异步加载数据的代码
-				mPage += 1;
-				loadNewsData(channel_id, mPage, true);
-			}
+//			int itemsLastIndex = mAdapter.getCount()-1;  //数据集最后一项的索引
+//			int lastIndex = itemsLastIndex;
+//			Log.d("onScrollListener", "onScroll" + (mVisibleLastIndex == lastIndex));
+//			if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE
+//					&& mVisibleLastIndex == lastIndex) {
+//				// 自动加载,在这里放置异步加载数据的代码
+//				mPage += 1;
+//				loadNewsData(channel_id, mPage, true);
+//			}
 		}
 
 		@Override
 		public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-			Log.d("onScrollListener", "onScroll");
+			Log.d("onScrollListener", "onScroll" + firstVisibleItem);
+			mSelectedScrollY = view.getScrollY();
 			mVisibleItemCount = visibleItemCount;
 			mVisibleLastIndex = firstVisibleItem + visibleItemCount - 1;
 		}

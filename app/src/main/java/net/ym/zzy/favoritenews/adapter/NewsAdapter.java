@@ -76,10 +76,10 @@ public class NewsAdapter extends BaseAdapter implements SectionIndexer, HeadList
 		int count = 0;
         boolean dataSetChanged = false;
         if (newsList != null && newsList.size() > 0){
-            for (int i = newsList.size() - 1; i >= 0; i--){
+            for (int i = 0; i <= newsList.size() - 1; i++){
                 NewsModel news = newsList.get(i);
                 if (!this.newsList.contains(news)){
-                    this.newsList.add(0, news);
+                    this.newsList.add(news);
                     dataSetChanged = true;
 					count++;
                 }
@@ -90,6 +90,13 @@ public class NewsAdapter extends BaseAdapter implements SectionIndexer, HeadList
         }
 		return count;
     }
+
+	public void clearData(){
+		if (newsList != null){
+			newsList.clear();
+			notifyDataSetChanged();
+		}
+	}
 	
 	private void initDateHead() {
 		mSections = new ArrayList<String>();
@@ -446,7 +453,7 @@ public class NewsAdapter extends BaseAdapter implements SectionIndexer, HeadList
             int section = getSectionForPosition(realPosition);
             String title = (String) getSections()[section];
             ((TextView) header.findViewById(R.id.section_text)).setText(title);
-            ((TextView) header.findViewById(R.id.section_day)).setText("今天");
+//            ((TextView) header.findViewById(R.id.section_day)).setText("今天");
         }
 	}
 
